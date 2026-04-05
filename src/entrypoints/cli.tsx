@@ -159,6 +159,17 @@ async function main(): Promise<void> {
     }
   }
 
+  // Interactive provider setup wizard — runs on first launch if no provider configured
+  {
+    const { shouldRunSetupWizard, runSetupWizard } = await import('../utils/providerSetupWizard.js')
+    if (shouldRunSetupWizard()) {
+      const completed = await runSetupWizard()
+      if (!completed) {
+        process.exit(0)
+      }
+    }
+  }
+
   validateProviderEnvOrExit()
 
   // Print the gradient startup screen before the Ink UI loads
