@@ -182,16 +182,66 @@ function convertMessages(
 
         // Emit tool results as tool messages
         for (const tr of toolResults) {
-          const trContent = Array.isArray(tr.content)
-            ? tr.content.map((c: { text?: string }) => c.text ?? '').join('\n')
-            : typeof tr.content === 'string'
-              ? tr.content
-              : JSON.stringify(tr.content ?? '')
-          result.push({
-            role: 'tool',
-            tool_call_id: tr.tool_use_id ?? 'unknown',
-            content: tr.is_error ? `Error: ${trContent}` : trContent,
-          })
+          // Check if tool result contains image blocks
+          const hasImages = Array.isArray(tr.content) && tr.content.some((c: { type?: string }) => c.type === 'image')
+
+          if (hasImages && Array.isArray(tr.content)) {
+            // Convert image blocks to OpenAI format and send as user message
+            // OpenAI doesn't support images inside tool messages, so we split:
+            // 1. Tool message with text content
+            // 2. User message with image content
+            const textParts = tr.content
+              .filter((c: { type?: string }) => c.type === 'text')
+              .map((c: { text?: string }) => c.text ?? '')
+              .join('\n')
+
+            result.push({
+              role: 'tool',
+              tool_call_id: tr.tool_use_id ?? 'unknown',
+              content: textParts || 'Image attached below.',
+            })
+
+            // Add images as user message
+            const imageParts = tr.content
+              .filter((c: { type?: string }) => c.type === 'image')
+              .map((c: { source?: { type?: string; data?: string; media_type?: string; url?: string } }) => {
+                const src = c.source
+                if (src?.type === 'base64') {
+                  return {
+                    type: 'image_url' as const,
+                    image_url: { url: `data:${src.media_type};base64,${src.data}` },
+                  }
+                } else if (src?.type === 'url') {
+                  return {
+                    type: 'image_url' as const,
+                    image_url: { url: src.url! },
+                  }
+                }
+                return null
+              })
+              .filter(Boolean)
+
+            if (imageParts.length > 0) {
+              result.push({
+                role: 'user',
+                content: [
+                  { type: 'text', text: 'Here is the image from the tool result:' },
+                  ...imageParts,
+                ] as Array<{ type: string; text?: string; image_url?: { url: string } }>,
+              })
+            }
+          } else {
+            const trContent = Array.isArray(tr.content)
+              ? tr.content.map((c: { text?: string }) => c.text ?? '').join('\n')
+              : typeof tr.content === 'string'
+                ? tr.content
+                : JSON.stringify(tr.content ?? '')
+            result.push({
+              role: 'tool',
+              tool_call_id: tr.tool_use_id ?? 'unknown',
+              content: tr.is_error ? `Error: ${trContent}` : trContent,
+            })
+          }
         }
 
         // Emit remaining user content

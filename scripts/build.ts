@@ -166,7 +166,6 @@ export async function handleBgFlag() { throw new Error("Background sessions are 
           'modifiers-napi',
           'url-handler-napi',
           'color-diff-napi',
-          'sharp',
           '@anthropic-ai/mcpb',
           '@ant/claude-for-chrome-mcp',
           '@anthropic-ai/sandbox-runtime',
@@ -263,6 +262,8 @@ export const SeverityNumber = {};
     },
   ],
   external: [
+    // Image processing — loaded at runtime from node_modules
+    'sharp',
     // OpenTelemetry — too many named exports to stub, kept external
     '@opentelemetry/api',
     '@opentelemetry/api-logs',

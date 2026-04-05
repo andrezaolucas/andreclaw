@@ -143,7 +143,9 @@ function convertToolResultToText(content: unknown): string {
 
     if (block?.type === 'image') {
       const src = block.source
-      if (src?.type === 'url' && src.url) {
+      if (src?.type === 'base64' && src.data) {
+        chunks.push(`[Image: base64 ${src.media_type}, ${Math.round(src.data.length * 0.75 / 1024)}KB]`)
+      } else if (src?.type === 'url' && src.url) {
         chunks.push(`[Image](${src.url})`)
       }
       continue
@@ -233,6 +235,9 @@ export function convertAnthropicMessagesToResponsesInput(
 
         for (const toolResult of toolResults) {
           const { callId } = normalizeToolUseId(toolResult.tool_use_id)
+          const hasImages = Array.isArray(toolResult.content) &&
+            toolResult.content.some((c: { type?: string }) => c.type === 'image')
+
           items.push({
             type: 'function_call_output',
             call_id: callId,
@@ -241,6 +246,34 @@ export function convertAnthropicMessagesToResponsesInput(
               return toolResult.is_error ? `Error: ${out}` : out
             })(),
           })
+
+          // If tool result contains images, add them as a user message
+          // since function_call_output doesn't support images
+          if (hasImages && Array.isArray(toolResult.content)) {
+            const imageParts = toolResult.content
+              .filter((c: { type?: string }) => c.type === 'image')
+              .map((c: { source?: { type?: string; data?: string; media_type?: string; url?: string } }) => {
+                const src = c.source
+                if (src?.type === 'base64') {
+                  return { type: 'input_image' as const, image_url: `data:${src.media_type};base64,${src.data}` }
+                } else if (src?.type === 'url') {
+                  return { type: 'input_image' as const, image_url: src.url! }
+                }
+                return null
+              })
+              .filter(Boolean)
+
+            if (imageParts.length > 0) {
+              items.push({
+                type: 'message',
+                role: 'user',
+                content: [
+                  { type: 'input_text', text: 'Here is the image from the tool result:' },
+                  ...imageParts,
+                ],
+              })
+            }
+          }
         }
 
         const parts = convertContentBlocksToResponsesParts(otherContent, 'user')
