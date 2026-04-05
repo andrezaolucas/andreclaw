@@ -8,7 +8,7 @@ const copy = {
   type: 'local-jsx',
   name: 'copy',
   description:
-    "Copiar última resposta do Claudinho pro clipboard (ou /copy N pra N-ésima mais recente)",
+    "Copiar última resposta do AndreClaw pro clipboard (ou /copy N pra N-ésima mais recente)",
   load: () => import('./copy.js'),
 } satisfies Command
 

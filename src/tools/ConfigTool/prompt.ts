@@ -21,7 +21,7 @@ export function generatePrompt(): string {
     // Voice settings are registered at build-time but gated by GrowthBook
     // at runtime. Hide from model prompt when the kill-switch is on.
     if (
-      feature('VOICE_MODE') &&
+      true &&
       key === 'voiceEnabled' &&
       !isVoiceGrowthBookEnabled()
     )

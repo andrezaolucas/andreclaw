@@ -187,7 +187,7 @@ test('buildProfileSaveMessage maps provider fields without echoing secrets', () 
       OPENAI_MODEL: 'gpt-4o',
       OPENAI_BASE_URL: 'https://api.openai.com/v1',
     },
-    'D:/codings/Opensource/openclaude/.openclaude-profile.json',
+    'D:/codings/Opensource/andreclaw/.andreclaw-profile.json',
   )
 
   expect(message).toContain('Saved OpenAI-compatible profile.')

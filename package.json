@@ -1,10 +1,10 @@
 {
-  "name": "@touchzada/claudinho",
-  "version": "0.1.8",
-  "description": "Assistente de IA no terminal com qualquer modelo — OpenAI, Gemini, DeepSeek, Ollama e 200+",
+  "name": "andreclaw",
+  "version": "1.0.0",
+  "description": "AndreClaw — Terminal de IA com qualquer modelo",
   "type": "module",
   "bin": {
-    "claudinho": "./bin/claudinho.cmd"
+    "andreclaw": "./bin/andreclaw"
   },
   "files": [
     "bin/",
@@ -128,14 +128,6 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/touchzada/Claudinho.git"
-  },
-  "bugs": {
-    "url": "https://github.com/touchzada/Claudinho/issues"
-  },
-  "homepage": "https://github.com/touchzada/Claudinho#readme",
   "keywords": [
     "claude-code",
     "openai",
@@ -146,8 +138,5 @@
     "ollama",
     "gemini"
   ],
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+  "license": "MIT"
 }

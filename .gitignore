@@ -14,7 +14,7 @@ dist/
 .claude
 .kiro
 .vscode
-.openclaude-profile.json
+.andreclaw-profile.json
 
 # Personalidade customizada (substituir pelo .example)
 CLAUDE.md
@@ -28,7 +28,7 @@ CLAUDE_CODE_REFERENCES.md
 IMPLEMENTATION_REPORT_SESSION_HISTORY_VIEWER.md
 
 # Gerados
-claudinho.cmd
+andreclaw.cmd
 
 # Backup e debug
 *.bak

@@ -96,7 +96,7 @@ export function calculateOptimalLeftWidth(
  */
 export function formatWelcomeMessage(username: string | null): string {
   if (!username || username.length > MAX_USERNAME_LENGTH) {
-    return 'Bem-vindo ao Claudinho'
+    return 'Bem-vindo ao AndreClaw'
   }
   return `Bem-vindo de volta, ${username}`
 }

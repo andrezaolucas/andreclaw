@@ -35,7 +35,7 @@ export async function sendNotification(
   })
 }
 
-const DEFAULT_TITLE = 'Claudinho'
+const DEFAULT_TITLE = 'AndreClaw'
 
 async function sendToChannel(
   channel: string,

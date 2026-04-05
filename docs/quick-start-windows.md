@@ -1,4 +1,4 @@
-# Início Rápido do OpenClaude no Windows
+# Início Rápido do AndreClaw no Windows
 
 Este guia usa o PowerShell do Windows.
 
@@ -17,10 +17,10 @@ npm --version
 
 Se aparecer um número como `v20.x` ou maior, tá pronto. Se não, reinstale e reinicie o terminal.
 
-## 2. Instale o OpenClaude
+## 2. Instale o AndreClaw
 
 ```powershell
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 ```
 
 ## 3. Escolha um Provedor
@@ -34,7 +34,7 @@ $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_API_KEY="sk-your-key-here"
 $env:OPENAI_MODEL="gpt-4o"
 
-claudinho
+andreclaw
 ```
 
 ### Opção B: DeepSeek
@@ -45,7 +45,7 @@ $env:OPENAI_API_KEY="sk-your-key-here"
 $env:OPENAI_BASE_URL="https://api.deepseek.com/v1"
 $env:OPENAI_MODEL="deepseek-chat"
 
-claudinho
+andreclaw
 ```
 
 ### Opção C: Ollama
@@ -61,17 +61,17 @@ $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_BASE_URL="http://localhost:11434/v1"
 $env:OPENAI_MODEL="llama3.1:8b"
 
-claudinho
+andreclaw
 ```
 
 Sem necessidade de chave de API para modelos locais do Ollama.
 
-## 4. Se `claudinho` Não For Encontrado
+## 4. Se `andreclaw` Não For Encontrado
 
 Feche o PowerShell, abra um novo e tente de novo:
 
 ```powershell
-claudinho
+andreclaw
 ```
 
 ## 5. Se o Provedor Falhar
@@ -89,16 +89,16 @@ Verifique o básico:
 - certifique-se que o Ollama tá rodando
 - certifique-se que o modelo foi baixado com `ollama pull`
 
-## 6. Atualizando o OpenClaude
+## 6. Atualizando o AndreClaw
 
 ```powershell
-npm install -g @touchzada/claudinho@latest
+npm install -g andreclaw@latest
 ```
 
-## 7. Desinstalando o OpenClaude
+## 7. Desinstalando o AndreClaw
 
 ```powershell
-npm uninstall -g @touchzada/claudinho
+npm uninstall -g andreclaw
 ```
 
 ## Quer Mais Controle?

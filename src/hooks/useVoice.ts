@@ -19,7 +19,7 @@ import {
   type FinalizeSource,
   isVoiceStreamAvailable,
   type VoiceStreamConnection,
-} from '../services/voiceStreamSTT.js'
+} from '../services/voiceWhisperSTT.js'
 import { logForDebugging } from '../utils/debug.js'
 import { toError } from '../utils/errors.js'
 import { getSystemLocaleLanguage } from '../utils/intl.js'

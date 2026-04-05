@@ -1,18 +1,11 @@
 import type { Command } from '../../commands.js'
-import {
-  isVoiceGrowthBookEnabled,
-  isVoiceModeEnabled,
-} from '../../voice/voiceModeEnabled.js'
 
 const voice = {
   type: 'local',
   name: 'voice',
-  description: 'Toggle voice mode',
-  availability: ['claude-ai'],
-  isEnabled: () => isVoiceGrowthBookEnabled(),
-  get isHidden() {
-    return !isVoiceModeEnabled()
-  },
+  description: 'Toggle voice mode (whisper.cpp local STT)',
+  isEnabled: () => true,
+  isHidden: false,
   supportsNonInteractive: false,
   load: () => import('./voice.js'),
 } satisfies Command

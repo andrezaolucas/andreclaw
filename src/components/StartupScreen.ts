@@ -1,12 +1,12 @@
 /**
- * OpenClaude startup screen — filled-block text logo with sunset gradient.
+ * AndreClaw startup screen — filled-block text logo with sunset gradient.
  * Called once at CLI startup before the Ink UI renders.
  *
  * Logo customization: edit src/components/logoConfig.json
- * Run: openclaude logo-preview (preview), openclaude logo-edit (interactive editor)
+ * Run: andreclaw logo-preview (preview), andreclaw logo-edit (interactive editor)
  * Safety backup: StartupScreen.ts.bak.original (copy of the original)
  *
- * Addresses: https://github.com/Gitlawb/openclaude/issues/55
+ * Addresses: https://github.com/andrelucas/andreclaw/issues/55
  */
 
 declare const MACRO: { VERSION: string; DISPLAY_VERSION?: string }
@@ -92,12 +92,12 @@ const LOGO_OPEN: string[] = (() => {
   const cfg = loadConfig()
   if (cfg.logoOpen && cfg.logoOpen.length > 0) return cfg.logoOpen
   return [
-    `   ██████╗ ██╗      █████╗ ██╗   ██╗██████╗ ██╗███╗   ██╗██╗  ██╗ ██████╗ `,
-    `  ██╔════╝ ██║     ██╔══██╗██║   ██║██╔══██╗██║████╗  ██║██║  ██║██╔═══██╗`,
-    `  ██║      ██║     ███████║██║   ██║██║  ██║██║██╔██╗ ██║███████║██║   ██║`,
-    `  ██║      ██║     ██╔══██║██║   ██║██║  ██║██║██║╚██╗██║██╔══██║██║   ██║`,
-    `  ╚██████╗ ███████╗██║  ██║╚██████╔╝██████╔╝██║██║ ╚████║██║  ██║╚██████╔╝`,
-    `   ╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ `,
+    `   █████╗ ███╗   ██╗██████╗ ██████╗ ███████╗ ██████╗██╗      █████╗ ██╗    ██╗`,
+    `  ██╔══██╗████╗  ██║██╔══██╗██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗██║    ██║`,
+    `  ███████║██╔██╗ ██║██║  ██║██████╔╝█████╗  ██║     ██║     ███████║██║ █╗ ██║`,
+    `  ██╔══██║██║╚██╗██║██║  ██║██╔══██╗██╔══╝  ██║     ██║     ██╔══██║██║███╗██║`,
+    `  ██║  ██║██║ ╚████║██████╔╝██║  ██║███████╗╚██████╗███████╗██║  ██║╚███╔███╔╝`,
+    `  ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝ `,
   ]
 })()
 
@@ -117,7 +117,7 @@ const SUNSET_GRAD: RGB[] = (() => {
 })()
 const TAGLINE: string = (() => {
   const cfg = loadConfig()
-  return cfg.tagline ?? 'Qualquer provedor. Qualquer modelo. De graça, PRA SEMPRE.'
+  return cfg.tagline ?? 'If you can think it, you can build it.'
 })()
 
 // Color helpers (loaded from config or defaults)
@@ -223,73 +223,50 @@ export function printStartupScreen(): void {
   if (process.env.CI || !process.stdout.isTTY) return
 
   const p = detectProvider()
-  const W = BOX_WIDTH
-  const cfg = loadConfig()
+  const W = 62
   const out: string[] = []
 
-  // Calculate horizontal centering
   const terminalWidth = process.stdout.columns || 80
-  const logoWidth = 75 // Approximate width of CLAUDINHO logo
+  const logoWidth = 80
   const leftPad = Math.max(0, Math.floor((terminalWidth - logoWidth) / 2))
   const pad = ' '.repeat(leftPad)
 
   out.push('')
 
-  // Extra lines before logo
-  const extraBefore = cfg.extraLinesBefore ?? []
-  extraBefore.forEach((line) => out.push(`${pad}  ${rgb(...DIMCOL)}${line}${RESET}`))
-
-  // Gradient logo
-  const allLogo = [...LOGO_OPEN, '', ...LOGO_CLAUDE]
-  const total = allLogo.length
-  for (let i = 0; i < total; i++) {
-    const t = total > 1 ? i / (total - 1) : 0
-    if (allLogo[i] === '') {
-      out.push('')
-    } else {
-      out.push(pad + paintLine(allLogo[i], SUNSET_GRAD, t))
-    }
+  // Logo — plain white, no color
+  for (const line of LOGO_OPEN) {
+    out.push(pad + line)
   }
 
   out.push('')
-
-  // Tagline
-  out.push(`${pad}  ${rgb(...ACCENT)}\u2726${RESET} ${rgb(...CREAM)}${TAGLINE}${RESET} ${rgb(...ACCENT)}\u2726${RESET}`)
-
-  // Extra lines after tagline
-  const extraAfter = cfg.extraLinesAfter ?? []
-  extraAfter.forEach((line) => out.push(`${pad}  ${rgb(...DIMCOL)}${line}${RESET}`))
-
+  const taglinePad = Math.max(0, Math.floor((terminalWidth - TAGLINE.length) / 2))
+  out.push(' '.repeat(taglinePad) + TAGLINE)
   out.push('')
 
-  // Provider info box (centered)
+  // Provider info box — plain borders
   const boxPad = ' '.repeat(Math.max(0, Math.floor((terminalWidth - W) / 2)))
-  out.push(`${boxPad}${rgb(...BORDER)}\u2554${'\u2550'.repeat(W - 2)}\u2557${RESET}`)
+  out.push(`${boxPad}\u2554${'\u2550'.repeat(W - 2)}\u2557`)
 
-  const lbl = (k: string, v: string, c: RGB = CREAM): [string, number] => {
+  const lbl = (k: string, v: string): string => {
     const padK = k.padEnd(9)
-    return [` ${DIM}${rgb(...DIMCOL)}${padK}${RESET} ${rgb(...c)}${v}${RESET}`, ` ${padK} ${v}`.length]
+    const content = ` ${padK} ${v}`
+    const innerPad = Math.max(0, W - 2 - content.length)
+    return `\u2502${content}${' '.repeat(innerPad)}\u2502`
   }
 
-  const provC: RGB = p.isLocal ? [130, 175, 130] : ACCENT
-  let [r, l] = lbl('Provedor', p.name, provC)
-  out.push(boxPad + boxRow(r, W, l))
-  ;[r, l] = lbl('Modelo', p.model)
-  out.push(boxPad + boxRow(r, W, l))
+  out.push(boxPad + lbl('Provedor', p.name))
+  out.push(boxPad + lbl('Modelo', p.model))
   const ep = p.baseUrl.length > 38 ? p.baseUrl.slice(0, 35) + '...' : p.baseUrl
-  ;[r, l] = lbl('Endpoint', ep)
-  out.push(boxPad + boxRow(r, W, l))
+  out.push(boxPad + lbl('Endpoint', ep))
 
-  out.push(`${boxPad}${rgb(...BORDER)}\u2560${'\u2550'.repeat(W - 2)}\u2563${RESET}`)
+  out.push(`${boxPad}\u2560${'\u2550'.repeat(W - 2)}\u2563`)
 
-  const sC: RGB = p.isLocal ? [130, 175, 130] : ACCENT
-  const sL = p.isLocal ? 'local' : 'local'
-  const sRow = ` ${rgb(...sC)}\u25cf${RESET} ${DIM}${rgb(...DIMCOL)}${sL}${RESET}    ${DIM}${rgb(...DIMCOL)}Pronto \u2014 lança um ${RESET}${rgb(...ACCENT)}/help${RESET}${DIM}${rgb(...DIMCOL)} ai ${RESET}`
-  const sLen = ` \u25cf ${sL}    Ready \u2014 type /help to begin`.length
-  out.push(boxPad + boxRow(sRow, W, sLen))
+  const statusContent = ` Pronto — /help para comecar`
+  const statusPad = Math.max(0, W - 2 - statusContent.length)
+  out.push(`${boxPad}\u2502${statusContent}${' '.repeat(statusPad)}\u2502`)
 
-  out.push(`${boxPad}${rgb(...BORDER)}\u255a${'\u2550'.repeat(W - 2)}\u255d${RESET}`)
-  out.push(`${boxPad}  ${DIM}${rgb(...DIMCOL)}                    claudinho ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}`)
+  out.push(`${boxPad}\u255a${'\u2550'.repeat(W - 2)}\u255d`)
+  out.push(`${boxPad}${' '.repeat(20)}andreclaw v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}`)
   out.push('')
 
   process.stdout.write(out.join('\n') + '\n')

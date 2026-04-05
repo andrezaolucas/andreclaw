@@ -1,5 +1,5 @@
 /**
- * Traduções PT-BR para Claudinho
+ * Traduções PT-BR para AndreClaw
  * 
  * Sistema de internacionalização simples para traduzir
  * comandos, mensagens e interface do usuário.
@@ -46,17 +46,17 @@ export const translations = {
     },
     exit: {
       name: 'exit',
-      description: 'Sair do Claudinho',
+      description: 'Sair do AndreClaw',
     },
     quit: {
       name: 'quit',
-      description: 'Sair do Claudinho',
+      description: 'Sair do AndreClaw',
     },
   },
 
   // Mensagens da UI
   ui: {
-    'claude-code': 'Claudinho',
+    'claude-code': 'AndreClaw',
     'version': 'versão',
     'ready': 'Pronto',
     'type-help': 'digite /help para começar',
@@ -83,11 +83,11 @@ export const translations = {
 
   // Mensagens de erro
   errors: {
-    'update-required': 'Parece que sua versão do Claudinho ({{version}}) precisa de atualização.',
+    'update-required': 'Parece que sua versão do AndreClaw ({{version}}) precisa de atualização.',
     'newer-version-required': 'Uma versão mais nova ({{minVersion}} ou superior) é necessária para continuar.',
-    'git-bash-not-found': 'Claudinho no Windows requer git-bash (https://git-scm.com/downloads/win)',
-    'auth-required': 'Sessões web do Claudinho requerem autenticação com uma conta Claude.ai',
-    'run-status': 'Execute /status no Claudinho para verificar sua conta',
+    'git-bash-not-found': 'AndreClaw no Windows requer git-bash (https://git-scm.com/downloads/win)',
+    'auth-required': 'Sessões web do AndreClaw requerem autenticação com uma conta Claude.ai',
+    'run-status': 'Execute /status no AndreClaw para verificar sua conta',
   },
 
   // Configurações (/config)
@@ -120,7 +120,7 @@ export const translations = {
     'notifications': 'Notificações',
     'push-when-idle': 'Notificar quando ocioso',
     'push-when-input-needed': 'Notificar quando precisar de entrada',
-    'push-when-claude-decides': 'Notificar quando o Claudinho decidir',
+    'push-when-claude-decides': 'Notificar quando o AndreClaw decidir',
     'output-style': 'Estilo de saída',
     'default-view': 'O que você vê por padrão',
     'language': 'Idioma',
@@ -218,7 +218,7 @@ export const translations = {
     'yes': 'Sim',
     'no': 'Não',
     'yes-allow-all-edits-session': 'Sim, permitir todas as edições durante esta sessão',
-    'yes-allow-claude-edit-settings': 'Sim, e permitir que o Claudinho edite suas próprias configurações nesta sessão',
+    'yes-allow-claude-edit-settings': 'Sim, e permitir que o AndreClaw edite suas próprias configurações nesta sessão',
     'yes-during-session': 'Sim, durante esta sessão',
     'yes-allow-reading-from': 'Sim, permitir leitura de',
     'during-this-session': 'durante esta sessão',
@@ -243,7 +243,7 @@ export const translations = {
     'advanced': 'Avançado',
   },
 
-  // Spinner Tips (dicas que aparecem enquanto o Claudinho trabalha)
+  // Spinner Tips (dicas que aparecem enquanto o AndreClaw trabalha)
   tips: {
     'new-user-warmup': 'Comece com features pequenas ou correções de bugs, peça pra eu propor um plano, e verifique as edições sugeridas',
     'plan-mode-for-complex-tasks': 'Use o Modo Planejamento pra preparar uma solicitação complexa antes de fazer mudanças. Pressione {{shortcut}} duas vezes pra ativar.',
@@ -267,15 +267,15 @@ export const translations = {
     'enter-to-steer-in-realtime': 'Mande mensagens pro Claude enquanto ele trabalha pra guiá-lo em tempo real',
     'todo-list': 'Peça pro Claude criar uma lista de tarefas quando trabalhar em tasks complexas pra acompanhar o progresso',
     'vscode-command-install': 'Abra a Paleta de Comandos (Cmd+Shift+P) e execute "Shell Command: Install \'{{terminal}}\' command in PATH" pra ativar integração com IDE',
-    'ide-upsell-external-terminal': 'Conecte o Claudinho à sua IDE · /ide',
-    'install-github-app': 'Execute /install-github-app pra marcar @claudinho direto das suas issues e PRs do Github',
-    'install-slack-app': 'Execute /install-slack-app pra usar o Claudinho no Slack',
+    'ide-upsell-external-terminal': 'Conecte o AndreClaw à sua IDE · /ide',
+    'install-github-app': 'Execute /install-github-app pra marcar @andreclaw direto das suas issues e PRs do Github',
+    'install-slack-app': 'Execute /install-slack-app pra usar o AndreClaw no Slack',
     'permissions': 'Use /permissions pra pré-aprovar e pré-negar ferramentas bash, edit e MCP',
     'drag-and-drop-images': 'Sabia que você pode arrastar e soltar arquivos de imagem no seu terminal?',
-    'paste-images-mac': 'Cole imagens no Claudinho usando control+v (não cmd+v!)',
+    'paste-images-mac': 'Cole imagens no AndreClaw usando control+v (não cmd+v!)',
     'double-esc': 'Aperte esc duas vezes pra rebobinar a conversa pra um ponto anterior no tempo',
     'double-esc-code-restore': 'Aperte esc duas vezes pra rebobinar o código e/ou conversa pra um ponto anterior no tempo',
-    'continue': 'Execute claudinho --continue ou claudinho --resume pra retomar uma conversa',
+    'continue': 'Execute andreclaw --continue ou andreclaw --resume pra retomar uma conversa',
     'rename-conversation': 'Nomeie suas conversas com /rename pra encontrá-las facilmente no /resume depois',
     'custom-commands': 'Crie skills adicionando arquivos .md em .claude/skills/ no seu projeto ou ~/.claude/skills/ pra skills que funcionam em qualquer projeto',
     'shift-tab-ant': 'Aperte {{shortcut}} pra alternar entre os modos',
@@ -283,10 +283,10 @@ export const translations = {
     'image-paste': 'Use {{shortcut}} pra colar imagens da sua área de transferência',
     'custom-agents': 'Use /agents pra otimizar tarefas específicas. Ex: Arquiteto de Software, Escritor de Código, Revisor de Código',
     'agent-flag': 'Use --agent <nome_agente> pra iniciar diretamente uma conversa com um subagente',
-    'desktop-app': 'Execute o Claudinho localmente ou remotamente usando o app desktop: clau.de/desktop',
-    'desktop-shortcut': 'Continue sua sessão no Claudinho Desktop com {{command}}',
+    'desktop-app': 'Execute o AndreClaw localmente ou remotamente usando o app desktop: clau.de/desktop',
+    'desktop-shortcut': 'Continue sua sessão no AndreClaw Desktop com {{command}}',
     'web-app': 'Execute tarefas na nuvem enquanto continua codando localmente · clau.de/web',
-    'mobile-app': '/mobile pra usar o Claudinho do app no seu celular',
+    'mobile-app': '/mobile pra usar o AndreClaw do app no seu celular',
     'opusplan-mode-reminder': 'Sua configuração de modelo padrão é Opus Plan Mode. Pressione {{shortcut}} duas vezes pra ativar o Modo Planejamento.',
     'frontend-design-plugin': 'Trabalhando com HTML/CSS? Instale o plugin frontend-design:\n{{command}}',
     'vercel-plugin': 'Trabalhando com Vercel? Instale o plugin vercel:\n{{command}}',
@@ -297,7 +297,7 @@ export const translations = {
     'loop-command-nudge-a': '{{command}} executa qualquer prompt numa agenda recorrente. Ótimo pra monitorar deploys, cuidar de PRs, ou checar status.',
     'loop-command-nudge-b': 'Use {{command}} pra executar qualquer prompt numa agenda. Configure e esqueça.',
     'guest-passes': 'Você tem passes de convidado grátis pra compartilhar · {{command}}',
-    'guest-passes-with-reward': 'Compartilhe o Claudinho e ganhe {{reward}} de uso extra · {{command}}',
+    'guest-passes-with-reward': 'Compartilhe o AndreClaw e ganhe {{reward}} de uso extra · {{command}}',
     'guest-passes-no-reward': 'Você tem passes de convidado grátis pra compartilhar · {{command}}',
     'overage-credit': '{{amount}} em uso extra, por nossa conta · apps de terceiros · {{command}}',
     'feedback-command': 'Use /feedback pra nos ajudar a melhorar!',

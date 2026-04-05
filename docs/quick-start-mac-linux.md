@@ -1,4 +1,4 @@
-# Início Rápido do OpenClaude no macOS e Linux
+# Início Rápido do AndreClaw no macOS e Linux
 
 Este guia usa um terminal padrão como iTerm, Terminal, bash ou zsh.
 
@@ -21,10 +21,10 @@ node --version
 npm --version
 ```
 
-## 2. Instale o OpenClaude
+## 2. Instale o AndreClaw
 
 ```bash
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 ```
 
 ## 3. Escolha um Provedor
@@ -38,7 +38,7 @@ export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_API_KEY=sk-your-key-here
 export OPENAI_MODEL=gpt-4o
 
-claudinho
+andreclaw
 ```
 
 ### Opção B: DeepSeek
@@ -49,7 +49,7 @@ export OPENAI_API_KEY=sk-your-key-here
 export OPENAI_BASE_URL=https://api.deepseek.com/v1
 export OPENAI_MODEL=deepseek-chat
 
-claudinho
+andreclaw
 ```
 
 ### Opção C: Ollama
@@ -65,17 +65,17 @@ export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_BASE_URL=http://localhost:11434/v1
 export OPENAI_MODEL=llama3.1:8b
 
-claudinho
+andreclaw
 ```
 
 Sem necessidade de chave de API para modelos locais do Ollama.
 
-## 4. Se `claudinho` Não For Encontrado
+## 4. Se `andreclaw` Não For Encontrado
 
 Feche o terminal, abra um novo e tente de novo:
 
 ```bash
-claudinho
+andreclaw
 ```
 
 ## 5. Se o Provedor Falhar
@@ -93,16 +93,16 @@ Verifique o básico:
 - certifique-se que o Ollama tá rodando
 - certifique-se que o modelo foi baixado com `ollama pull`
 
-## 6. Atualizando o OpenClaude
+## 6. Atualizando o AndreClaw
 
 ```bash
-npm install -g @touchzada/claudinho@latest
+npm install -g andreclaw@latest
 ```
 
-## 7. Desinstalando o OpenClaude
+## 7. Desinstalando o AndreClaw
 
 ```bash
-npm uninstall -g @touchzada/claudinho
+npm uninstall -g andreclaw
 ```
 
 ## Quer Mais Controle?

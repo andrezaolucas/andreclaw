@@ -291,7 +291,7 @@ export function buildProfileSaveMessage(
   }
 
   lines.push(`Perfil: ${filePath}`)
-  lines.push('Reinicia o claudinho pra usar.')
+  lines.push('Reinicia o andreclaw pra usar.')
 
   return lines.join('\n')
 }
@@ -308,7 +308,7 @@ function buildUsageText(): string {
     `Endpoint atual: ${summary.endpointLabel}`,
     `Perfil salvo: ${summary.savedProfileLabel}`,
     '',
-    'Escolhe Auto, Ollama, OpenAI-compatível, Gemini ou Codex, e salva um perfil pro próximo restart do claudinho.',
+    'Escolhe Auto, Ollama, OpenAI-compatível, Gemini ou Codex, e salva um perfil pro próximo restart do andreclaw.',
   ].join('\n')
 }
 
@@ -452,7 +452,7 @@ function ProviderChooser({
     >
       <Box flexDirection="column" gap={1}>
         <Text>
-          Salva um perfil de provedor pro próximo restart do claudinho sem
+          Salva um perfil de provedor pro próximo restart do andreclaw sem
           precisar mexer nas variáveis de ambiente.
         </Text>
         <Box flexDirection="column">
@@ -924,7 +924,7 @@ function ProviderWizard({ onDone }: { onDone: LocalJSXCommandOnDone }): React.Re
               setStep({ name: 'gemini-key' })
             } else if (value === 'clear') {
               const filePath = deleteProfileFile()
-              onDone(`Perfil de provedor removido de ${filePath}. Reinicia o claudinho pra voltar pro startup normal.`, {
+              onDone(`Perfil de provedor removido de ${filePath}. Reinicia o andreclaw pra voltar pro startup normal.`, {
                 display: 'system',
               })
             } else {

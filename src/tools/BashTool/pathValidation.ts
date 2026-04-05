@@ -935,7 +935,7 @@ function validateOutputRedirections(
   if (compoundCommandHasCd && redirections.length > 0) {
     return {
       behavior: 'ask',
-      message: `Comandos que mudam de diretório e escrevem via redirecionamento de saída requerem aprovação explícita pra garantir que os caminhos sejam avaliados corretamente. Por segurança, o Claudinho não pode determinar automaticamente o diretório de trabalho final quando 'cd' é usado em comandos compostos.`,
+      message: `Comandos que mudam de diretório e escrevem via redirecionamento de saída requerem aprovação explícita pra garantir que os caminhos sejam avaliados corretamente. Por segurança, o AndreClaw não pode determinar automaticamente o diretório de trabalho final quando 'cd' é usado em comandos compostos.`,
       decisionReason: {
         type: 'other',
         reason:

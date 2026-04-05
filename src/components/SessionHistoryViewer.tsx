@@ -87,7 +87,7 @@ export function SessionHistoryViewer({
     <Box flexDirection="column" padding={1}>
       {/* Header */}
       <Box marginBottom={1}>
-        <Text bold>Bem-vindo ao Claudinho</Text>
+        <Text bold>Bem-vindo ao AndreClaw</Text>
       </Box>
 
       {/* Session list */}

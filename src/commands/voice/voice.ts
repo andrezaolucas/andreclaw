@@ -1,66 +1,35 @@
 import { normalizeLanguageForSTT } from '../../hooks/useVoice.js'
 import { getShortcutDisplay } from '../../keybindings/shortcutFormat.js'
-import { logEvent } from '../../services/analytics/index.js'
+import { getWhisperStatus } from '../../services/voiceWhisperSTT.js'
 import type { LocalCommandCall } from '../../types/command.js'
-import { isAnthropicAuthEnabled } from '../../utils/auth.js'
-import { getGlobalConfig, saveGlobalConfig } from '../../utils/config.js'
-import { settingsChangeDetector } from '../../utils/settings/changeDetector.js'
-import {
-  getInitialSettings,
-  updateSettingsForSource,
-} from '../../utils/settings/settings.js'
-import { isVoiceModeEnabled } from '../../voice/voiceModeEnabled.js'
-
-const LANG_HINT_MAX_SHOWS = 2
+import { getInitialSettings } from '../../utils/settings/settings.js'
 
 export const call: LocalCommandCall = async () => {
-  // Check auth and kill-switch before allowing voice mode
-  if (!isVoiceModeEnabled()) {
-    // Differentiate: OAuth-less users get an auth hint, everyone else
-    // gets nothing (command shouldn't be reachable when the kill-switch is on).
-    if (!isAnthropicAuthEnabled()) {
-      return {
-        type: 'text' as const,
-        value:
-          'Voice mode requires a Claude.ai account. Please run /login to sign in.',
-      }
-    }
+  // Check whisper.cpp availability
+  const whisper = getWhisperStatus()
+  if (!whisper.available) {
+    const hint = whisper.installCommand
+      ? `\nInstall whisper.cpp: ${whisper.installCommand}`
+      : '\nSee https://github.com/ggml-org/whisper.cpp for installation.'
     return {
       type: 'text' as const,
-      value: 'Voice mode is not available.',
+      value: `Voice mode requires whisper.cpp for local speech-to-text.${hint}`,
     }
   }
 
-  const currentSettings = getInitialSettings()
-  const isCurrentlyEnabled = currentSettings.voiceEnabled === true
-
-  // Toggle OFF — no checks needed
-  if (isCurrentlyEnabled) {
-    const result = updateSettingsForSource('userSettings', {
-      voiceEnabled: false,
-    })
-    if (result.error) {
-      return {
-        type: 'text' as const,
-        value:
-          'Failed to update settings. Check your settings file for syntax errors.',
-      }
-    }
-    settingsChangeDetector.notifyChange('userSettings')
-    logEvent('tengu_voice_toggled', { enabled: false })
+  if (!whisper.model) {
     return {
       type: 'text' as const,
-      value: 'Voice mode disabled.',
+      value:
+        'Whisper model not found. Download one:\n' +
+        '  mkdir -p ~/.cache/whisper && curl -L -o ~/.cache/whisper/ggml-base.bin \\\n' +
+        '    https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin\n' +
+        'Or set WHISPER_MODEL_PATH env var.',
     }
   }
 
-  // Toggle ON — run pre-flight checks first
-  const { isVoiceStreamAvailable } = await import(
-    '../../services/voiceStreamSTT.js'
-  )
+  // Run pre-flight checks
   const { checkRecordingAvailability } = await import('../../services/voice.js')
-
-  // Check recording availability (microphone access)
   const recording = await checkRecordingAvailability()
   if (!recording.available) {
     return {
@@ -70,16 +39,6 @@ export const call: LocalCommandCall = async () => {
     }
   }
 
-  // Check for API key
-  if (!isVoiceStreamAvailable()) {
-    return {
-      type: 'text' as const,
-      value:
-        'Voice mode requires a Claude.ai account. Please run /login to sign in.',
-    }
-  }
-
-  // Check for recording tools
   const { checkVoiceDependencies, requestMicrophonePermission } = await import(
     '../../services/voice.js'
   )
@@ -94,8 +53,6 @@ export const call: LocalCommandCall = async () => {
     }
   }
 
-  // Probe mic access so the OS permission dialog fires now rather than
-  // on the user's first hold-to-talk activation.
   if (!(await requestMicrophonePermission())) {
     let guidance: string
     if (process.platform === 'win32') {
@@ -111,40 +68,18 @@ export const call: LocalCommandCall = async () => {
     }
   }
 
-  // All checks passed — enable voice
-  const result = updateSettingsForSource('userSettings', { voiceEnabled: true })
-  if (result.error) {
-    return {
-      type: 'text' as const,
-      value:
-        'Failed to update settings. Check your settings file for syntax errors.',
-    }
-  }
-  settingsChangeDetector.notifyChange('userSettings')
-  logEvent('tengu_voice_toggled', { enabled: true })
-  const key = getShortcutDisplay('voice:pushToTalk', 'Chat', 'Space')
+  // All checks passed — show status
+  const key = getShortcutDisplay('voice:pushToTalk', 'Chat', 'Ctrl+Space')
+  const currentSettings = getInitialSettings()
   const stt = normalizeLanguageForSTT(currentSettings.language)
-  const cfg = getGlobalConfig()
-  // Reset the hint counter whenever the resolved STT language changes
-  // (including first-ever enable, where lastLanguage is undefined).
-  const langChanged = cfg.voiceLangHintLastLanguage !== stt.code
-  const priorCount = langChanged ? 0 : (cfg.voiceLangHintShownCount ?? 0)
-  const showHint = !stt.fellBackFrom && priorCount < LANG_HINT_MAX_SHOWS
   let langNote = ''
   if (stt.fellBackFrom) {
-    langNote = ` Note: "${stt.fellBackFrom}" is not a supported dictation language; using English. Change it via /config.`
-  } else if (showHint) {
-    langNote = ` Dictation language: ${stt.code} (/config to change).`
-  }
-  if (langChanged || showHint) {
-    saveGlobalConfig(prev => ({
-      ...prev,
-      voiceLangHintShownCount: priorCount + (showHint ? 1 : 0),
-      voiceLangHintLastLanguage: stt.code,
-    }))
+    langNote = `\nNote: "${stt.fellBackFrom}" is not a supported dictation language; using English.`
+  } else {
+    langNote = `\nDictation language: ${stt.code} (/config to change).`
   }
   return {
     type: 'text' as const,
-    value: `Voice mode enabled. Hold ${key} to record.${langNote}`,
+    value: `Voice mode active (whisper.cpp local STT).\nHold ${key} to record, release to transcribe.${langNote}\nBinary: ${whisper.binary}\nModel: ${whisper.model}`,
   }
 }

@@ -152,7 +152,7 @@ export function SessionPickerDialog({ onNew, onResume, onSkip }: Props) {
     <Box flexDirection="column" alignItems="center" paddingX={2} paddingY={1}>
       <Box flexDirection="column" borderStyle="round" borderColor="cyan" paddingX={2} paddingY={1} width={72}>
         <Text bold={true}>
-          <Text color="cyan"> Bem-vindo ao Claudinho</Text>{' '}
+          <Text color="cyan"> Bem-vindo ao AndreClaw</Text>{' '}
           <Text dimColor={true}>v0.1.7</Text>
         </Text>
         <Text color="gray" dimColor={true}>

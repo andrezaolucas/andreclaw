@@ -1,4 +1,4 @@
-# Guia de Tradução PT-BR - Claudinho
+# Guia de Tradução PT-BR - AndreClaw
 
 ## Status da Tradução
 
@@ -9,7 +9,7 @@
    - Sistema de tradução via `t()` do `src/i18n/pt-BR.ts`
 
 2. **Logo e Startup** - `src/components/logoConfig.json`
-   - Logo mudada de "OPEN CLAUDE" para "CLAUDINHO"
+   - Logo mudada de "OPEN CLAUDE" para "ANDRECLAW"
    - Tagline traduzida
 
 3. **Sistema de Tradução** - `src/i18n/pt-BR.ts`
@@ -67,7 +67,7 @@
    - "Yes" → "Sim"
    - "No" → "Não"
    - "Yes, allow all edits during this session" → "Sim, permitir todas as edições durante esta sessão"
-   - "Yes, and allow Claude to edit its own settings" → "Sim, e permitir que o Claudinho edite suas próprias configurações"
+   - "Yes, and allow Claude to edit its own settings" → "Sim, e permitir que o AndreClaw edite suas próprias configurações"
    - "and tell Claude what to do next" → "e diga o que fazer depois"
    - "and tell Claude what to do differently" → "e diga o que fazer diferente"
    - "Esc to cancel" → "Esc pra cancelar"
@@ -83,7 +83,7 @@
      - Comandos individuais em `src/commands/*/index.ts`
 
 7. **Interface do /help**
-   - Título "Claude Code v99.0.0" → "Claudinho v99.0.0"
+   - Título "Claude Code v99.0.0" → "AndreClaw v99.0.0"
    - Tabs: "general", "commands", "custom-commands"
    - Link: "For more help: https://..."
    - Footer: "esc to cancel"
@@ -113,7 +113,7 @@ Muitos arquivos estão compilados pelo React Compiler, o que dificulta a ediçã
 3. Ou usar os wrappers criados e substituir imports nos arquivos que os usam
 4. Traduzir interface do `/help`
 5. Aplicar traduções de comandos
-6. Testar tudo com `bun run build` e `claudinho`
+6. Testar tudo com `bun run build` e `andreclaw`
 
 ## Arquivos Criados
 

@@ -1,15 +1,24 @@
 #!/usr/bin/env node
 
 /**
- * Claudinho — Terminal de IA com qualquer modelo
+ * AndreClaw — Terminal de IA com qualquer modelo
  *
  * Se dist/cli.mjs existe (compilado), roda ele.
  * Caso contrário, avisa o usuário pra compilar primeiro ou usar `bun run dev`.
  */
 
-import { existsSync } from 'fs'
+import { existsSync, mkdirSync, copyFileSync } from 'fs'
 import { join, dirname } from 'path'
+import { homedir } from 'os'
 import { fileURLToPath, pathToFileURL } from 'url'
+
+// AndreClaw usa seu proprio diretorio de config (~/.andreclaw)
+// separado do Claude Code (~/.claude)
+const andreClawDir = join(homedir(), '.andreclaw')
+if (!existsSync(andreClawDir)) {
+  mkdirSync(andreClawDir, { recursive: true })
+}
+process.env.CLAUDE_CONFIG_DIR = andreClawDir
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const distPath = join(__dirname, '..', 'dist', 'cli.mjs')
@@ -18,7 +27,7 @@ if (existsSync(distPath)) {
   await import(pathToFileURL(distPath).href)
 } else {
   console.error(`
-  claudinho: dist/cli.mjs não encontrado.
+  andreclaw: dist/cli.mjs não encontrado.
 
   Compile primeiro:
     bun run build

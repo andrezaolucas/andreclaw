@@ -141,7 +141,7 @@ export const SUPPORTED_SETTINGS: Record<string, SettingConfig> = {
         },
       }
     : {}),
-  ...(feature('VOICE_MODE')
+  ...(true
     ? {
         voiceEnabled: {
           source: 'settings' as const,

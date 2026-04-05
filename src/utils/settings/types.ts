@@ -867,14 +867,11 @@ export const SettingsSchema = lazySchema(() =>
               ),
           }
         : {}),
-      ...(feature('VOICE_MODE')
-        ? {
-            voiceEnabled: z
-              .boolean()
-              .optional()
-              .describe('Enable voice mode (hold-to-talk dictation)'),
-          }
-        : {}),
+      // AndreClaw: voice mode always available
+      voiceEnabled: z
+        .boolean()
+        .optional()
+        .describe('Enable voice mode (hold-to-talk dictation with local whisper.cpp)'),
       ...(feature('KAIROS')
         ? {
             assistant: z

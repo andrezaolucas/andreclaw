@@ -4,7 +4,7 @@ const status = {
   type: 'local-jsx',
   name: 'status',
   description:
-    'Mostrar status do Claudinho incluindo versão, modelo, conta, conectividade da API e status das ferramentas',
+    'Mostrar status do AndreClaw incluindo versão, modelo, conta, conectividade da API e status das ferramentas',
   immediate: true,
   load: () => import('./status.js'),
 } satisfies Command

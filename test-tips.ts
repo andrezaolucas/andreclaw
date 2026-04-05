@@ -5,7 +5,7 @@
 
 import { t } from './src/i18n/pt-BR.js'
 
-console.log('🇧🇷 TIPS TRADUZIDAS DO CLAUDINHO\n')
+console.log('🇧🇷 TIPS TRADUZIDAS DO ANDRECLAW\n')
 console.log('=' .repeat(60))
 
 const tips = [

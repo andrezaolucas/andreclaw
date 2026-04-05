@@ -1,4 +1,4 @@
-# Configuração Avançada do OpenClaude
+# Configuração Avançada do AndreClaw
 
 Este guia é para quem quer builds do código fonte, Bun, perfis locais, diagnósticos e mais controle sobre o comportamento do sistema.
 
@@ -7,7 +7,7 @@ Este guia é para quem quer builds do código fonte, Bun, perfis locais, diagnó
 ### Opção A: npm
 
 ```bash
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 ```
 
 ### Opção B: Do código fonte com Bun
@@ -15,8 +15,8 @@ npm install -g @touchzada/claudinho
 Use Bun `1.3.11` ou mais novo para builds no Windows. Versões mais antigas do Bun podem falhar no `bun run build`.
 
 ```bash
-git clone https://github.com/touchzada/Claudinho.git
-cd Claudinho
+git clone https://github.com/andrelucas/andreclaw.git
+cd andreclaw
 
 bun install
 bun run build
@@ -26,8 +26,8 @@ npm link
 ### Opção C: Rodar direto com Bun
 
 ```bash
-git clone https://github.com/touchzada/Claudinho.git
-cd Claudinho
+git clone https://github.com/andrelucas/andreclaw.git
+cd andreclaw
 
 bun install
 bun run dev
@@ -50,7 +50,7 @@ export OPENAI_MODEL=gpt-4o
 `codexplan` usa GPT-5.4 no backend Codex com alto raciocínio.
 `codexspark` usa GPT-5.3 Codex Spark para voltas mais rápidas.
 
-Se você já usa o Codex CLI, o OpenClaude lê `~/.codex/auth.json` automaticamente. Você também pode apontar outro caminho com `CODEX_AUTH_JSON_PATH` ou definir o token direto com `CODEX_API_KEY`.
+Se você já usa o Codex CLI, o AndreClaw lê `~/.codex/auth.json` automaticamente. Você também pode apontar outro caminho com `CODEX_AUTH_JSON_PATH` ou definir o token direto com `CODEX_API_KEY`.
 
 ```bash
 export CLAUDE_CODE_USE_OPENAI=1
@@ -59,7 +59,7 @@ export OPENAI_MODEL=codexplan
 # opcional se você já tem ~/.codex/auth.json
 export CODEX_API_KEY=sua-chave-aqui
 
-openclaude
+andreclaw
 ```
 
 ### DeepSeek
@@ -108,7 +108,7 @@ Ou use o lançador por perfil:
 bun run dev:atomic-chat
 ```
 
-Baixe o Atomic Chat em [atomic.chat](https://atomic.chat/). O app precisa estar rodando com um modelo carregado antes de lançar o OpenClaude.
+Baixe o Atomic Chat em [atomic.chat](https://atomic.chat/). O app precisa estar rodando com um modelo carregado antes de lançar o AndreClaw.
 
 ### LM Studio
 
@@ -167,7 +167,7 @@ export OPENAI_MODEL=gpt-4o
 | `CODEX_API_KEY` | Só Codex | Token de acesso ao Codex ou ChatGPT |
 | `CODEX_AUTH_JSON_PATH` | Só Codex | Caminho do arquivo `auth.json` do Codex CLI |
 | `CODEX_HOME` | Só Codex | Pasta alternativa do Codex |
-| `OPENCLAUDE_DISABLE_CO_AUTHORED_BY` | Não | Remove o rodapé `Co-Authored-By` nos commits git |
+| `ANDRECLAW_DISABLE_CO_AUTHORED_BY` | Não | Remove o rodapé `Co-Authored-By` nos commits git |
 
 Você também pode usar `ANTHROPIC_MODEL` para trocar o modelo. `OPENAI_MODEL` tem prioridade.
 
@@ -237,7 +237,7 @@ bun run profile:init -- --provider atomic-chat
 # Bootstrap Codex com modelo rápido
 bun run profile:init -- --provider codex --model codexspark
 
-# Lança com perfil salvo (.openclaude-profile.json)
+# Lança com perfil salvo (.andreclaw-profile.json)
 bun run dev:profile
 
 # Perfil Codex (usa CODEX_API_KEY ou ~/.codex/auth.json)
@@ -272,5 +272,5 @@ Use `profile:codex` ou `--provider codex` quando quiser o backend Codex do ChatG
 
 ## Links
 
-- [Repositório](https://github.com/touchzada/Claudinho)
+- [Repositório](https://github.com/andrelucas/andreclaw)
 - [Guia em Português](../GUIA_INICIO.md)

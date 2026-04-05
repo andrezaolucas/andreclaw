@@ -164,7 +164,7 @@ export async function showSetupScreens(root: Root, permissionMode: PermissionMod
 
       if (selectedSessionId) {
         // Pass selected session to main REPL via env var
-        process.env.CLAUDINHO_RESUME_SESSION = selectedSessionId;
+        process.env.ANDRECLAW_RESUME_SESSION = selectedSessionId;
       }
     }
 

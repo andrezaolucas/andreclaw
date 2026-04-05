@@ -1,19 +1,19 @@
-ESSE PROJETO É BASEADO NO OPENCLAUDE!
+ESSE PROJETO É BASEADO NO ANDRECLAW!
 <img width="1919" height="1027" alt="print1" src="https://github.com/user-attachments/assets/96ae02ff-9cd5-4fba-a255-2ed2ff7255ab" />
 <img width="1908" height="345" alt="print2" src="https://github.com/user-attachments/assets/116a57c2-b49a-4ede-b75c-4bb6d2996e99" />
 <img width="1902" height="816" alt="print3" src="https://github.com/user-attachments/assets/7615b6d3-ed40-4851-9d76-b4c93a0d199b" />
 <img width="859" height="378" alt="print4" src="https://github.com/user-attachments/assets/682c6dc6-77e1-46c1-b432-fe1bfead9551" />
 
-# Claudinho
+# AndreClaw
 
 
 > **Qualquer provedor. Qualquer modelo. De graça, PRA SEMPRE.**
 
-O Claudinho é um projeto open-source que permite usar um assistente de IA no terminal com **qualquer modelo de linguagem** — não só com um provedor específico.
+O AndreClaw é um projeto open-source que permite usar um assistente de IA no terminal com **qualquer modelo de linguagem** — não só com um provedor específico.
 
-Com o Claudinho você pode usar GPT-4o, DeepSeek, Gemini, Llama, Mistral, Codex e 200+ modelos que falam a API da OpenAI, tudo com a mesma experiência de terminal.
+Com o AndreClaw você pode usar GPT-4o, DeepSeek, Gemini, Llama, Mistral, Codex e 200+ modelos que falam a API da OpenAI, tudo com a mesma experiência de terminal.
 
-Na sua primeira conversa, o claudinho pode perguntar de onde você é, mas isso é só uma instrução que eu alimentei pra que a conversa seja baseada em qual cidade você vive, com gírias, modo de falar mais descontraido e usando referências e a forma de linguagem da cidade em específico. 
+Na sua primeira conversa, o andreclaw pode perguntar de onde você é, mas isso é só uma instrução que eu alimentei pra que a conversa seja baseada em qual cidade você vive, com gírias, modo de falar mais descontraido e usando referências e a forma de linguagem da cidade em específico. 
 
 ---
 
@@ -34,16 +34,16 @@ Se você quer builds do código fonte, Bun, perfis locais, diagnósticos ou exem
 Para a maioria dos usuários, instale pelo npm:
 
 ```bash
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 ```
 
 Depois de instalar, rode:
 
 ```bash
-claudinho
+andreclaw
 ```
 
-Se instalar via npm e depois ver `ripgrep not found`, instale o ripgrep no sistema e confirme que `rg --version` funciona no mesmo terminal antes de abrir o Claudinho.
+Se instalar via npm e depois ver `ripgrep not found`, instale o ripgrep no sistema e confirme que `rg --version` funciona no mesmo terminal antes de abrir o AndreClaw.
 
 ---
 
@@ -52,25 +52,25 @@ Se instalar via npm e depois ver `ripgrep not found`, instale o ripgrep no siste
 ### Windows PowerShell
 
 ```powershell
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 
 $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_API_KEY="sk-sua-chave-aqui"
 $env:OPENAI_MODEL="gpt-4o"
 
-claudinho
+andreclaw
 ```
 
 ### macOS / Linux
 
 ```bash
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 
 export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_API_KEY=sk-sua-chave-aqui
 export OPENAI_MODEL=gpt-4o
 
-claudinho
+andreclaw
 ```
 
 Isso é suficiente para começar com a OpenAI.
@@ -142,10 +142,10 @@ Todos suportados via protocolo OpenAI. Veja exemplos na [Configuração Avançad
 
 ## Como funciona
 
-O Claudinho usa um adaptador compatível com a API da OpenAI (`src/services/api/openaiShim.ts`) que traduz a comunicação entre a IA e o terminal:
+O AndreClaw usa um adaptador compatível com a API da OpenAI (`src/services/api/openaiShim.ts`) que traduz a comunicação entre a IA e o terminal:
 
 ```
-Sistema de Ferramentas do Claudinho
+Sistema de Ferramentas do AndreClaw
         |
         v
   Interface SDK (duck-typed)
@@ -204,8 +204,8 @@ src/utils/auth.ts                — Reconhece OpenAI como provedor válido
 
 ## Links
 
-- [Repositório](https://github.com/touchzada/Claudinho)
-- [Reportar bugs](https://github.com/touchzada/Claudinho/issues)
+- [Repositório](https://github.com/andrelucas/andreclaw)
+- [Reportar bugs](https://github.com/andrelucas/andreclaw/issues)
 - [Guia em Português](GUIA_INICIO.md)
 - [Configuração Avançada](docs/advanced-setup.md)
 
@@ -221,31 +221,31 @@ Este projeto é fornecido para fins educacionais e de pesquisa. As adições do 
 
 Aqui está explicado cada arquivo importante do projeto, pra você entender o que é o quê:
 
-### Executar o Claudinho
+### Executar o AndreClaw
 
-- **`bin/claudinho`** — É o script principal que roda o Claudinho. Ele é um arquivo JavaScript (`.mjs` compatível) que começa com `#!/usr/bin/env node` — isso diz pro sistema: "execute este arquivo com o Node.js". Quando você instala via npm, este arquivo fica registrado como o comando `claudinho` no seu PATH. Ele apenas verifica se o arquivo compilado `dist/cli.mjs` existe e o executa. Se o build não foi feito, ele mostra uma mensagem amigável pedindo para rodar `bun run build`.
+- **`bin/andreclaw`** — É o script principal que roda o AndreClaw. Ele é um arquivo JavaScript (`.mjs` compatível) que começa com `#!/usr/bin/env node` — isso diz pro sistema: "execute este arquivo com o Node.js". Quando você instala via npm, este arquivo fica registrado como o comando `andreclaw` no seu PATH. Ele apenas verifica se o arquivo compilado `dist/cli.mjs` existe e o executa. Se o build não foi feito, ele mostra uma mensagem amigável pedindo para rodar `bun run build`.
 
-- **`bin/claudinho.cmd`** — Este é um wrapper (um "embrulho") para o Windows. No Windows, o sistema não reconhece a shebang (`#!/usr/bin/env node`) dos scripts Unix, então o `npm` ignora o `bin/claudinho` ao publicar o pacote no Windows. O `.cmd` é um script do Windows (batch) que faz a mesma coisa: chama o `node` com o arquivo `bin/claudinho`. Por que ele existe? É uma correção de compatibilidade — o npm no Windows não detecta o permission bit Unix (755) que marca um arquivo como executável, então ele "corrige" automaticamente removendo o binário. O `.cmd` contorna isso porque o Windows sabe executar batch nativamente.
+- **`bin/andreclaw.cmd`** — Este é um wrapper (um "embrulho") para o Windows. No Windows, o sistema não reconhece a shebang (`#!/usr/bin/env node`) dos scripts Unix, então o `npm` ignora o `bin/andreclaw` ao publicar o pacote no Windows. O `.cmd` é um script do Windows (batch) que faz a mesma coisa: chama o `node` com o arquivo `bin/andreclaw`. Por que ele existe? É uma correção de compatibilidade — o npm no Windows não detecta o permission bit Unix (755) que marca um arquivo como executável, então ele "corrige" automaticamente removendo o binário. O `.cmd` contorna isso porque o Windows sabe executar batch nativamente.
 
 ### Código fonte principal
 
-- **`src/constants/prompts.ts`** — Aqui fica o **system prompt** — é o texto que diz pro Claudinho como ele deve se comportar, que personalidade ele tem, que regras seguir, como falar. É o "cérebro comportamental" dele. Quando a IA te diz "E aí, mano!", ela tá lendo o que tá escrito aqui.
+- **`src/constants/prompts.ts`** — Aqui fica o **system prompt** — é o texto que diz pro AndreClaw como ele deve se comportar, que personalidade ele tem, que regras seguir, como falar. É o "cérebro comportamental" dele. Quando a IA te diz "E aí, mano!", ela tá lendo o que tá escrito aqui.
 
-- **`src/constants/personality.ts`** — O arquivo de **personalidade**. Contém o mapeamento de gírias por região brasileira, as regras de humor, as instruções de como o Claudinho deve brincar com o usuário, e o sistema de memória que guarda nome e cidade do usuário entre sessões.
+- **`src/constants/personality.ts`** — O arquivo de **personalidade**. Contém o mapeamento de gírias por região brasileira, as regras de humor, as instruções de como o AndreClaw deve brincar com o usuário, e o sistema de memória que guarda nome e cidade do usuário entre sessões.
 
 - **`src/i18n/pt-BR.ts`** — O sistema de **tradução completo pro português brasileiro**. Traduz menus, mensagens de erro, atalhos, permissões, tooltips — basicamente toda a interface visual que aparece no terminal.
 
-- **`src/services/api/openaiShim.ts`** — O **adaptador principal** que faz o Claudinho funcionar com qualquer modelo. Traduz o formato de mensagem da Anthropic para o formato OpenAI e vice-versa. Sem isso, só funcionaria com o Claude.
+- **`src/services/api/openaiShim.ts`** — O **adaptador principal** que faz o AndreClaw funcionar com qualquer modelo. Traduz o formato de mensagem da Anthropic para o formato OpenAI e vice-versa. Sem isso, só funcionaria com o Claude.
 
-- **`src/entrypoints/cli.tsx`** — O **ponto de entrada** do Claudinho. É o primeiro arquivo que roda quando você digita o comando. Ele configura o ambiente, valida provedores, lê as configurações e inicia a interface.
+- **`src/entrypoints/cli.tsx`** — O **ponto de entrada** do AndreClaw. É o primeiro arquivo que roda quando você digita o comando. Ele configura o ambiente, valida provedores, lê as configurações e inicia a interface.
 
 ### Build e scripts
 
-- **`scripts/build.ts`** — O script que **compila** todo o Claudinho. Usa o Bun Bundle para juntar todos os arquivos TypeScript em um único `dist/cli.mjs`. Remove telemetria, injeta constantes de versão, e cria stubs para módulos nativos que não podem ser empacotados.
+- **`scripts/build.ts`** — O script que **compila** todo o AndreClaw. Usa o Bun Bundle para juntar todos os arquivos TypeScript em um único `dist/cli.mjs`. Remove telemetria, injeta constantes de versão, e cria stubs para módulos nativos que não podem ser empacotados.
 
-- **`scripts/no-telemetry-plugin.ts`** — Plugin do build que **remove toda a telemetria**. Substitui 14 módulos de coleta de dados da Anthropic por funções vazias — zero calls pra API da Anthropic, zero rastreamento. É como se o Claudinho fosse completamente silencioso em dados.
+- **`scripts/no-telemetry-plugin.ts`** — Plugin do build que **remove toda a telemetria**. Substitui 14 módulos de coleta de dados da Anthropic por funções vazias — zero calls pra API da Anthropic, zero rastreamento. É como se o AndreClaw fosse completamente silencioso em dados.
 
-- **`scripts/provider-launch.ts`** — Script que **lança o Claudinho com um perfil de provedor**. Útil pra desenvolvimento — ex: `bun run dev:openai` começa direto com OpenAI configurada.
+- **`scripts/provider-launch.ts`** — Script que **lança o AndreClaw com um perfil de provedor**. Útil pra desenvolvimento — ex: `bun run dev:openai` começa direto com OpenAI configurada.
 
 - **`scripts/provider-bootstrap.ts`** — O **assistente interativo de configuração** (`bun run profile:init`). Pergunta qual provedor quer, pede a chave, escolhe modelo e salva.
 
@@ -257,7 +257,7 @@ Aqui está explicado cada arquivo importante do projeto, pra você entender o qu
 
 ### Configuração e documentação
 
-- **`package.json`** — O arquivo que diz pro npm: "isso é um pacote chamado `@touchzada/claudinho`, versão 0.1.8, que roda com Node.js 20+, e quando instalar globalmente, crie o comando `claudinho`".
+- **`package.json`** — O arquivo que diz pro npm: "isso é um pacote chamado `andreclaw`, versão 0.1.8, que roda com Node.js 20+, e quando instalar globalmente, crie o comando `andreclaw`".
 
 - **`.env.example`** — Modelo de arquivo de configuração com **exemplos de cada provedor**. Mostra todas as variáveis de ambiente possíveis e como configurar cada um.
 
@@ -277,7 +277,7 @@ Aqui está explicado cada arquivo importante do projeto, pra você entender o qu
 
 ### Arquivos gerados pelo build
 
-- **`dist/cli.mjs`** — O Claudinho **compilado**. Um único arquivo JavaScript com todo o código empacotado. É o que roda na instalação final do usuário.
+- **`dist/cli.mjs`** — O AndreClaw **compilado**. Um único arquivo JavaScript com todo o código empacotado. É o que roda na instalação final do usuário.
 
 - **`dist/cli.mjs.map`** — O **sourcemap**. Um arquivo que relaciona o código compilado de volta aos arquivos fonte originais. Útil quando dá erro — mostra a linha exata no código original em vez de apontar pro código compilado que é ilegível.
 

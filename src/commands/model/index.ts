@@ -6,7 +6,7 @@ export default {
   type: 'local-jsx',
   name: 'model',
   get description() {
-    return `Definir o modelo de IA pro Claudinho (atualmente ${renderModelName(getMainLoopModel())})`
+    return `Definir o modelo de IA pro AndreClaw (atualmente ${renderModelName(getMainLoopModel())})`
   },
   argumentHint: '[model]',
   get immediate() {

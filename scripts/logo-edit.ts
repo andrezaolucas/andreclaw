@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 /**
- * Interactive Logo Editor for OpenClaude Startup Screen
+ * Interactive Logo Editor for AndreClaw Startup Screen
  *
  * Run with: bun run scripts/logo-edit.ts
- * Or: openclaude logo-edit
+ * Or: andreclaw logo-edit
  *
  * Lets you customize the startup logo, tagline, and colors with live preview.
  * All changes saved to src/components/logoConfig.json
@@ -132,7 +132,7 @@ function renderPreview(config: LogoConfig) {
 }
 
 function printMenu() {
-  console.log(`${rgb(240, 148, 100)}═══════════════ OpenClaude Logo Editor ═══════════════════${RESET}`)
+  console.log(`${rgb(240, 148, 100)}═══════════════ AndreClaw Logo Editor ═══════════════════${RESET}`)
   console.log('')
   console.log(`  ${rgb(220, 195, 170)}1.${RESET}  Edit logoOpen (first logo)`)
   console.log(`  ${rgb(220, 195, 170)}2.${RESET}  Edit logoSecondary (CLAUDE text)`)
@@ -342,7 +342,7 @@ console.log(`${rgb(240, 148, 100)}
 ╚═╝  ╚═╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝
 ${RESET}`)
 
-console.log(`${rgb(220, 195, 170)}  OpenClaude Startup Screen Editor${RESET}`)
+console.log(`${rgb(220, 195, 170)}  AndreClaw Startup Screen Editor${RESET}`)
 console.log(`${rgb(120, 100, 82)}  Safety: all changes backed up to src/components/backups/${RESET}`)
 console.log('')
 

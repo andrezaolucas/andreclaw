@@ -363,7 +363,7 @@ function OAuthStatusMessage(t0) {
   switch (oauthStatus.state) {
     case "idle":
       {
-        const t1 = startingMessage ? startingMessage : "O Claudinho pode ser usado com sua assinatura Claude ou cobrado com base no uso da API através da sua conta Console.";
+        const t1 = startingMessage ? startingMessage : "O AndreClaw pode ser usado com sua assinatura Claude ou cobrado com base no uso da API através da sua conta Console.";
         let t2;
         if ($[0] !== t1) {
           t2 = <Text bold={true}>{t1}</Text>;
@@ -459,7 +459,7 @@ function OAuthStatusMessage(t0) {
         let t2;
         let t3;
         if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
-          t2 = <Text>O Claudinho suporta provedores compatíveis com OpenAI (GPT-4o, DeepSeek, Ollama, Groq), Google Gemini, Amazon Bedrock, Microsoft Foundry e Vertex AI. Rode <Text bold={true}>/provider</Text> para salvar um perfil, ou configure as variáveis de ambiente manualmente e reinicie o claudinho.</Text>;
+          t2 = <Text>O AndreClaw suporta provedores compatíveis com OpenAI (GPT-4o, DeepSeek, Ollama, Groq), Google Gemini, Amazon Bedrock, Microsoft Foundry e Vertex AI. Rode <Text bold={true}>/provider</Text> para salvar um perfil, ou configure as variáveis de ambiente manualmente e reinicie o andreclaw.</Text>;
           t3 = <Text>Se você faz parte de uma organização enterprise, contate seu administrador para instruções de configuração.</Text>;
           $[13] = t2;
           $[14] = t3;
@@ -491,7 +491,7 @@ function OAuthStatusMessage(t0) {
         let t7;
         if ($[18] === Symbol.for("react.memo_cache_sentinel")) {
             t7 = <Box flexDirection="column" marginTop={1}>{t4}
-              <Text>· Configuração guiada no claudinho:{"\n"}{"  "}/provider</Text>
+              <Text>· Configuração guiada no andreclaw:{"\n"}{"  "}/provider</Text>
               <Text>· OpenAI / any OpenAI-compatible provider (GPT-4o, DeepSeek, Ollama, Groq):{"\n"}{"  "}CLAUDE_CODE_USE_OPENAI=1  OPENAI_API_KEY=sk-...  OPENAI_MODEL=gpt-4o</Text>
               <Text>· Google Gemini (free key at https://aistudio.google.com/apikey):{"\n"}{"  "}CLAUDE_CODE_USE_GEMINI=1  GEMINI_API_KEY=your-key</Text>
             {t5}{t6}<Text>· Vertex AI:{" "}<Link url="https://code.claude.com/docs/en/google-vertex-ai">https://code.claude.com/docs/en/google-vertex-ai</Link></Text></Box>;
@@ -557,7 +557,7 @@ function OAuthStatusMessage(t0) {
       {
         let t1;
         if ($[37] === Symbol.for("react.memo_cache_sentinel")) {
-          t1 = <Box flexDirection="column" gap={1}><Box><Spinner /><Text>Criando chave de API pro Claudinho…</Text></Box></Box>;
+          t1 = <Box flexDirection="column" gap={1}><Box><Spinner /><Text>Criando chave de API pro AndreClaw…</Text></Box></Box>;
           $[37] = t1;
         } else {
           t1 = $[37];

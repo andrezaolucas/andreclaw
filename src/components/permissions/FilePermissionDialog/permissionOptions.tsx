@@ -104,7 +104,7 @@ export function getFilePermissionOptions({
   // persisted permission rules.
   if ((inClaudeFolder || inGlobalClaudeFolder) && operationType !== 'read') {
     options.push({
-      label: 'Sim, e permitir que o Claudinho edite suas próprias configurações pra esta sessão',
+      label: 'Sim, e permitir que o AndreClaw edite suas próprias configurações pra esta sessão',
       value: 'yes-claude-folder',
       option: {
         type: 'accept-session',

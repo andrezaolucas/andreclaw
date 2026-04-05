@@ -1,5 +1,5 @@
 /**
- * OpenClaude build script — bundles the TypeScript source into a single
+ * AndreClaw build script — bundles the TypeScript source into a single
  * distributable JS file using Bun's bundler.
  *
  * Handles:
@@ -17,7 +17,7 @@ const version = pkg.version
 // Feature flags — all disabled for the open build.
 // These gate Anthropic-internal features (voice, proactive, kairos, etc.)
 const featureFlags: Record<string, boolean> = {
-  VOICE_MODE: false,
+  VOICE_MODE: true,
   PROACTIVE: false,
   KAIROS: false,
   BRIDGE_MODE: false,
@@ -55,13 +55,13 @@ const result = await Bun.build({
     // MACRO.* build-time constants
     // Keep the internal compatibility version high enough to pass
     // first-party minimum-version guards, but expose the real package
-    // version separately in Open Claude branding.
+    // version separately in AndreClaw branding.
     'MACRO.VERSION': JSON.stringify('99.0.0'),
     'MACRO.DISPLAY_VERSION': JSON.stringify(version),
     'MACRO.BUILD_TIME': JSON.stringify(new Date().toISOString()),
     'MACRO.ISSUES_EXPLAINER':
-      JSON.stringify('report the issue at https://github.com/anthropics/claude-code/issues'),
-    'MACRO.PACKAGE_URL': JSON.stringify('@gitlawb/openclaude'),
+      JSON.stringify('reporte o problema no repositorio do projeto'),
+    'MACRO.PACKAGE_URL': JSON.stringify('andreclaw'),
     'MACRO.NATIVE_PACKAGE_URL': 'undefined',
   },
   plugins: [
@@ -102,17 +102,25 @@ export async function handleBgFlag() { throw new Error("Background sessions are 
           ],
         ] as const)
 
-        // Resolve `import { feature } from 'bun:bundle'` to a shim
+        // Resolve `import { feature } from 'bun:bundle'` to a shim.
+        // Generate a function with explicit if/return for each enabled flag
+        // so the bundler can inline and dead-code-eliminate properly.
         build.onResolve({ filter: /^bun:bundle$/ }, () => ({
           path: 'bun:bundle',
           namespace: 'bun-bundle-shim',
         }))
         build.onLoad(
           { filter: /.*/, namespace: 'bun-bundle-shim' },
-          () => ({
-            contents: `export function feature(name) { return false; }`,
-            loader: 'js',
-          }),
+          () => {
+            // Build a switch-case so Bun can statically evaluate feature() calls
+            const cases = Object.entries(featureFlags)
+              .map(([k, v]) => `    case '${k}': return ${v};`)
+              .join('\n')
+            return {
+              contents: `export function feature(name) {\n  switch(name) {\n${cases}\n    default: return false;\n  }\n}`,
+              loader: 'js',
+            }
+          },
         )
 
         build.onResolve(
@@ -293,4 +301,4 @@ if (!result.success) {
   process.exit(1)
 }
 
-console.log(`✓ Built claudinho v${version} → dist/cli.mjs`)
+console.log(`✓ Built andreclaw v${version} → dist/cli.mjs`)

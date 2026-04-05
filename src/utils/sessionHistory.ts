@@ -4,7 +4,7 @@
  * Scans `.claude/projects/<dir>/*.jsonl` transcript files in the current
  * project directory and builds a list of past sessions with title, date,
  * first prompt summary, and message count. Fully independent of SynaBun —
- * relies only on the JSONL transcripts that Claudinho already writes to disk.
+ * relies only on the JSONL transcripts that AndreClaw already writes to disk.
  */
 
 import { readdir, stat } from 'fs/promises'

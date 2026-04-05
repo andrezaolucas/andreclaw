@@ -1,8 +1,8 @@
 /**
- * OpenClaude startup screen — filled-block text logo with sunset gradient.
+ * AndreClaw startup screen — filled-block text logo with sunset gradient.
  * Called once at CLI startup before the Ink UI renders.
  *
- * Addresses: https://github.com/Gitlawb/openclaude/issues/55
+ * Addresses: https://github.com/andrelucas/andreclaw/issues/55
  */
 
 declare const MACRO: { VERSION: string; DISPLAY_VERSION?: string }
@@ -56,9 +56,9 @@ const CREAM: RGB = [220, 235, 200]
 const DIMCOL: RGB = [50, 100, 55]
 const BORDER: RGB = [0, 100, 30]
 
-// ─── CLAUDINHO Logo (checkerboard font à la Claudin Clawd) ──────────────────
+// ─── ANDRECLAW Logo (checkerboard font à la Claudin Clawd) ──────────────────
 
-const LOGO_CLAUDINHO = [
+const LOGO_ANDRECLAW = [
   `  ██  █     ██  █  █ ███  ████ █  █ █  █  ██`,
   `  █  █ █    █  █ █  █ █  █  ██  ██ █ █  █ █  █`,
   `  █    █    █  █ █  █ █  █  ██  ████ █  █ █  █`,
@@ -155,7 +155,7 @@ export function printStartupScreen(): void {
   out.push('')
 
   // Gradient logo
-  const allLogo = LOGO_CLAUDINHO
+  const allLogo = LOGO_ANDRECLAW
   const total = allLogo.length
   for (let i = 0; i < total; i++) {
     const t = total > 1 ? i / (total - 1) : 0
@@ -198,7 +198,7 @@ export function printStartupScreen(): void {
   out.push(boxRow(sRow, W, sLen))
 
   out.push(`${rgb(...BORDER)}\u255a${'\u2550'.repeat(W - 2)}\u255d${RESET}`)
-  out.push(`  ${DIM}${rgb(...DIMCOL)}openclaude ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}`)
+  out.push(`  ${DIM}${rgb(...DIMCOL)}andreclaw ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}`)
   out.push('')
 
   process.stdout.write(out.join('\n') + '\n')

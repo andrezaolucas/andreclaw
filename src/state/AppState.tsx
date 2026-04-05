@@ -14,7 +14,7 @@ import { createStore } from './store.js';
 /* eslint-disable @typescript-eslint/no-require-imports */
 const VoiceProvider: (props: {
   children: React.ReactNode;
-}) => React.ReactNode = feature('VOICE_MODE') ? require('../context/voice.js').VoiceProvider : ({
+}) => React.ReactNode = true ? require('../context/voice.js').VoiceProvider : ({
   children
 }) => children;
 

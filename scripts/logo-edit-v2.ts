@@ -463,7 +463,7 @@ async function main() {
   ╚═══════════════════════════════════════════════════════════╝
 ${RESET}`)
   
-  console.log(`${rgb(220, 195, 170)}  Advanced Logo Designer for OpenClaude${RESET}`)
+  console.log(`${rgb(220, 195, 170)}  Advanced Logo Designer for AndreClaw${RESET}`)
   console.log(`${DIM}  With templates, color presets, undo/redo, and more!${RESET}`)
   console.log('')
   

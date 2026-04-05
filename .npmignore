@@ -31,9 +31,9 @@ BACKUPS/
 AUTO_ANALYSIS_REPORT.md
 BACKUPS.md
 CLAUDE_CODE_REFERENCES.md
-claudinho.cmd
+andreclaw.cmd
 IMPLEMENTATION_REPORT_SESSION_HISTORY_VIEWER.md
-.openclaude-profile.json
+.andreclaw-profile.json
 
 # Dependências (instaladas pelo npm no destino)
 node_modules/

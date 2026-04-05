@@ -914,7 +914,7 @@ async function run(): Promise<CommanderCommand> {
     // terminal shell integration may mirror the process name to the tab.
     // After init() so settings.json env can also gate this (gh-4765).
     if (!isEnvTruthy(process.env.CLAUDE_CODE_DISABLE_TERMINAL_TITLE)) {
-      process.title = 'claudinho';
+      process.title = 'andreclaw';
     }
 
     // Attach logging sinks so subcommand handlers can use logEvent/logError.
@@ -1013,7 +1013,7 @@ async function run(): Promise<CommanderCommand> {
     if (prompt === 'code') {
       logEvent('tengu_code_prompt_ignored', {});
       // biome-ignore lint/suspicious/noConsole:: intentional console output
-      console.warn(chalk.yellow('Dica: Você pode lançar o Claudinho com apenas `claudinho`'));
+      console.warn(chalk.yellow('Dica: Você pode lançar o AndreClaw com apenas `andreclaw`'));
       prompt = undefined;
     }
 
@@ -3087,7 +3087,7 @@ async function run(): Promise<CommanderCommand> {
 
     // Handle session picker selection from the startup dialog.
     // If a session was selected, load and resume it just like --continue.
-    const envResumeSession = process.env.CLAUDINHO_RESUME_SESSION;
+    const envResumeSession = process.env.ANDRECLAW_RESUME_SESSION;
     if (envResumeSession) {
       let resumeSucceeded = false;
       try {
@@ -3843,7 +3843,7 @@ async function run(): Promise<CommanderCommand> {
         pendingHookMessages
       }, renderAndRun);
     }
-  }).version(`${MACRO.DISPLAY_VERSION ?? MACRO.VERSION} (Open Claude)`, '-v, --version', 'Output the version number');
+  }).version(`${MACRO.DISPLAY_VERSION ?? MACRO.VERSION} (AndreClaw)`, '-v, --version', 'Output the version number');
 
   // Worktree flags
   program.option('-w, --worktree [name]', 'Create a new git worktree for this session (optionally specify a name)');

@@ -74,9 +74,9 @@ export function getAttributionTexts(): AttributionTexts {
       ? getPublicModelName(model)
       : 'Claude Opus 4.6'
   const defaultAttribution =
-    '🤖 Generated with [OpenClaude](https://github.com/Gitlawb/openclaude)'
+    '🤖 Generated with [AndreClaw](https://github.com/andrelucas/andreclaw)'
   const defaultCommit = isEnvTruthy(
-    process.env.OPENCLAUDE_DISABLE_CO_AUTHORED_BY,
+    process.env.ANDRECLAW_DISABLE_CO_AUTHORED_BY,
   )
     ? ''
     : `Co-Authored-By: ${modelName} <noreply@anthropic.com>`
@@ -328,7 +328,7 @@ export async function getEnhancedPRAttribution(
   }
 
   const defaultAttribution =
-    '🤖 Generated with [OpenClaude](https://github.com/Gitlawb/openclaude)'
+    '🤖 Generated with [AndreClaw](https://github.com/andrelucas/andreclaw)'
 
   // Get AppState first
   const appState = getAppState()
@@ -374,7 +374,7 @@ export async function getEnhancedPRAttribution(
     memoryAccessCount > 0
       ? `, ${memoryAccessCount} ${memoryAccessCount === 1 ? 'memory' : 'memories'} recalled`
       : ''
-  const summary = `🤖 Generated with [OpenClaude](https://github.com/Gitlawb/openclaude) (${claudePercent}% ${promptCount}-shotted by ${shortModelName}${memSuffix})`
+  const summary = `🤖 Generated with [AndreClaw](https://github.com/andrelucas/andreclaw) (${claudePercent}% ${promptCount}-shotted by ${shortModelName}${memSuffix})`
 
   // Append trailer lines for squash-merge survival. Only for allowlisted repos
   // (INTERNAL_MODEL_REPOS) and only in builds with COMMIT_ATTRIBUTION enabled —

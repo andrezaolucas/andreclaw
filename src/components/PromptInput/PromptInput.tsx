@@ -1496,7 +1496,7 @@ function PromptInput({
     if (nextMode === 'bypassPermissions' && toolPermissionContext.mode !== 'bypassPermissions') {
       // Mostra aviso no console
       console.warn('\n⚠️  MODO PULAR PERMISSÕES ATIVADO ⚠️');
-      console.warn('O Claudinho vai executar TODAS as ações sem perguntar.');
+      console.warn('O AndreClaw vai executar TODAS as ações sem perguntar.');
       console.warn('Use apenas em ambientes de teste isolados!');
       console.warn('Aperte Shift+Tab novamente pra voltar ao modo padrão.\n');
     }

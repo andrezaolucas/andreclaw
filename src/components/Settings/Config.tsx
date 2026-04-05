@@ -706,7 +706,7 @@ export function Config({
       }
     }, {
       id: 'agentPushNotifEnabled',
-      label: 'Push quando Claudinho decidir',
+      label: 'Push quando AndreClaw decidir',
       value: globalConfig.agentPushNotifEnabled ?? false,
       type: 'boolean' as const,
       onChange(agentPushNotifEnabled: boolean) {
@@ -878,7 +878,7 @@ export function Config({
       }
     }] : []), {
       id: 'claudeInChromeDefaultEnabled',
-      label: 'Claudinho no Chrome habilitado por padrão',
+      label: 'AndreClaw no Chrome habilitado por padrão',
       value: globalConfig.claudeInChromeDefaultEnabled ?? true,
       type: 'boolean' as const,
       onChange(enabled_5: boolean) {

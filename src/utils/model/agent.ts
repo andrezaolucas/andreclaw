@@ -20,13 +20,10 @@ export type AgentModelOption = {
 
 /**
  * Get the default subagent model. Returns 'inherit' so subagents inherit
- * the model from the parent thread.
- * 
- * MODIFIED: Force Qwen to avoid Claude Code proprietary restrictions
+ * the model from the parent thread (same model as the main conversation).
  */
 export function getDefaultSubagentModel(): string {
-  // Force Qwen for all subagents to avoid Anthropic's Claude Code restrictions
-  return process.env.OPENAI_MODEL || 'qwen/qwen3.6-plus:free'
+  return process.env.CLAUDE_CODE_SUBAGENT_MODEL || 'inherit'
 }
 
 /**

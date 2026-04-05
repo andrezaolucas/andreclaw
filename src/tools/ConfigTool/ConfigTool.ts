@@ -110,10 +110,10 @@ export const ConfigTool = buildTool({
   renderToolUseRejectedMessage,
   async call({ setting, value }: Input, context): Promise<{ data: Output }> {
     // 1. Check if setting is supported
-    // Voice settings are registered at build-time (feature('VOICE_MODE')), but
+    // Voice settings are registered at build-time (true), but
     // must also be gated at runtime. When the kill-switch is on, treat
     // voiceEnabled as an unknown setting so no voice-specific strings leak.
-    if (feature('VOICE_MODE') && setting === 'voiceEnabled') {
+    if (true && setting === 'voiceEnabled') {
       const { isVoiceGrowthBookEnabled } = await import(
         '../../voice/voiceModeEnabled.js'
       )
@@ -230,27 +230,33 @@ export const ConfigTool = buildTool({
 
     // Pre-flight checks for voice mode
     if (
-      feature('VOICE_MODE') &&
+      true &&
       setting === 'voiceEnabled' &&
       finalValue === true
     ) {
-      const { isVoiceModeEnabled } = await import(
-        '../../voice/voiceModeEnabled.js'
+      const { getWhisperStatus } = await import(
+        '../../services/voiceWhisperSTT.js'
       )
-      if (!isVoiceModeEnabled()) {
-        const { isAnthropicAuthEnabled } = await import('../../utils/auth.js')
+      const whisper = getWhisperStatus()
+      if (!whisper.available) {
         return {
           data: {
             success: false,
-            error: !isAnthropicAuthEnabled()
-              ? 'Voice mode requires a Claude.ai account. Please run /login to sign in.'
-              : 'Voice mode is not available.',
+            error: whisper.installCommand
+              ? `Voice mode requires whisper.cpp. Install: ${whisper.installCommand}`
+              : 'Voice mode requires whisper.cpp. See https://github.com/ggml-org/whisper.cpp',
           },
         }
       }
-      const { isVoiceStreamAvailable } = await import(
-        '../../services/voiceStreamSTT.js'
-      )
+      if (!whisper.model) {
+        return {
+          data: {
+            success: false,
+            error:
+              'Whisper model not found. Download: curl -L -o ~/.cache/whisper/ggml-base.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin',
+          },
+        }
+      }
       const {
         checkRecordingAvailability,
         checkVoiceDependencies,
@@ -265,15 +271,6 @@ export const ConfigTool = buildTool({
             error:
               recording.reason ??
               'Voice mode is not available in this environment.',
-          },
-        }
-      }
-      if (!isVoiceStreamAvailable()) {
-        return {
-          data: {
-            success: false,
-            error:
-              'Voice mode requires a Claude.ai account. Please run /login to sign in.',
           },
         }
       }
@@ -345,7 +342,7 @@ export const ConfigTool = buildTool({
       // 5a. Voice needs notifyChange so applySettingsChange resyncs
       // AppState.settings (useVoiceEnabled reads settings.voiceEnabled)
       // and the settings cache resets for the next /voice read.
-      if (feature('VOICE_MODE') && setting === 'voiceEnabled') {
+      if (true && setting === 'voiceEnabled') {
         const { settingsChangeDetector } = await import(
           '../../utils/settings/changeDetector.js'
         )

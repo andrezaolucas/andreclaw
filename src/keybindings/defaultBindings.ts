@@ -93,7 +93,10 @@ export const DEFAULT_BINDINGS: KeybindingBlock[] = [
       // add a voice:pushToTalk entry (last wins); to disable, use /voice
       // — null-unbinding space hits a pre-existing useKeybinding.ts trap
       // where 'unbound' swallows the event (space dead for typing).
-      ...(feature('VOICE_MODE') ? { space: 'voice:pushToTalk' } : {}),
+      // AndreClaw: voice push-to-talk (hold space to record, release to transcribe)
+      // Hold detection: requires 5 rapid auto-repeat events before activating,
+      // so single space presses work normally for typing/dialogs.
+      space: 'voice:pushToTalk',
     },
   },
   {

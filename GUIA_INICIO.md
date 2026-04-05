@@ -1,4 +1,4 @@
-# Guia Completo do Claudinho
+# Guia Completo do AndreClaw
 
 > **Qualquer provedor. Qualquer modelo. De graça, PRA SEMPRE.**
 
@@ -6,9 +6,9 @@
 
 ---
 
-## O que é o Claudinho?
+## O que é o AndreClaw?
 
-O Claudinho é um assistente de programação que roda direto no seu terminal. Ele é baseado no **Claude Code**, mas com uma diferença **GIGANTE**: essa versão funciona com **QUALQUER** modelo de inteligência artificial — não só com o Claude.
+O AndreClaw é um assistente de programação que roda direto no seu terminal. Ele é baseado no **Claude Code**, mas com uma diferença **GIGANTE**: essa versão funciona com **QUALQUER** modelo de inteligência artificial — não só com o Claude.
 
 Isso significa que você pode usar:
 - **GPT-4o** da OpenAI (a mesma tecnologia do ChatGPT)
@@ -27,7 +27,7 @@ E tudo que funcionava no Claude Code original continua funcionando aqui: bash, l
 2. [Instalação](#2-instalação)
 3. [Primeiro uso](#3-primeiro-uso)
 4. [Configurando sua chave de API](#4-configurando-sua-chave-de-api)
-5. [Features especiais do Claudinho](#5-features-especiais-do-claudinho)
+5. [Features especiais do AndreClaw](#5-features-especiais-do-andreclaw)
 6. [Usando no dia a dia](#6-usando-no-dia-a-dia)
 7. [Configuração avançada](#7-configuração-avançada)
 8. [Solução de problemas](#8-solução-de-problemas)
@@ -41,8 +41,8 @@ E tudo que funcionava no Claude Code original continua funcionando aqui: bash, l
 
 | Coisa | Por quê | Como verificar |
 |-------|---------|----------------|
-| **Node.js 20 ou mais novo** | É o "motor" que faz o Claudinho funcionar | `node --version` no terminal |
-| **Terminal** | É onde o Claudinho roda | Todo computador tem um |
+| **Node.js 20 ou mais novo** | É o "motor" que faz o AndreClaw funcionar | `node --version` no terminal |
+| **Terminal** | É onde o AndreClaw roda | Todo computador tem um |
 
 ### Como instalar o Node.js (se não tiver)
 
@@ -66,7 +66,7 @@ E tudo que funcionava no Claude Code original continua funcionando aqui: bash, l
 Abre o terminal e digita:
 
 ```bash
-npm install -g @touchzada/claudinho
+npm install -g andreclaw
 ```
 
 **O que esse comando faz?**
@@ -75,24 +75,24 @@ npm install -g @touchzada/claudinho
 |------------------|-----------------|
 | `npm install` | "npm, instala isso pra mim" |
 | `-g` | **Global** — instala em qualquer pasta, não só no projeto atual |
-| `@touchzada/claudinho` | É o nome do pacote do Claudinho |
+| `andreclaw` | É o nome do pacote do AndreClaw |
 
 Depois da instalação, confirma que funcionou:
 
 ```bash
-claudinho --version
+andreclaw --version
 ```
 
 Se aparecer um número (tipo `0.1.7`), **tá instalado e pronto**.
 
-> **Atenção:** O nome do pacote é `@touchzada/claudinho`, mas o comando que você roda é `claudinho`. É normal! É como se o pacote se chamasse "Maria" mas todo mundo chamasse de "Mari".
+> **Atenção:** O nome do pacote é `andreclaw`, mas o comando que você roda é `andreclaw`. É normal! É como se o pacote se chamasse "Maria" mas todo mundo chamasse de "Mari".
 
 ### Método 2: Usando sem instalar (npx)
 
 Se você não quer instalar nada permanente no computador:
 
 ```bash
-npx @touchzada/claudinho
+npx andreclaw
 ```
 
 | Vantagem | Desvantagem |
@@ -106,8 +106,8 @@ Se você quer mexer no código, contribuir pro projeto ou rodar a versão mais r
 
 ```bash
 # 1. Baixa o código do repositório
-git clone https://github.com/Gitlawb/claudinho.git
-cd claudinho
+git clone https://github.com/andrelucas/andreclaw.git
+cd andreclaw
 
 # 2. Instala as dependências (precisa ter o Bun)
 bun install
@@ -135,11 +135,11 @@ curl -fsSL https://bun.sh/install | bash
 
 ### 3.1. O que acontece quando você roda pela primeira vez
 
-Quando você digita `claudinho` no terminal, vai aparecer uma **tela de boas-vindas**. O Claudinho te guia por umas etapas rapidinhas:
+Quando você digita `andreclaw` no terminal, vai aparecer uma **tela de boas-vindas**. O AndreClaw te guia por umas etapas rapidinhas:
 
 #### Etapa 1 — Escolha do tema
 
-O Claudinho te pergunta: **claro ou escuro?**
+O AndreClaw te pergunta: **claro ou escuro?**
 
 - **Tema escuro:** fundo preto, letras claras. **Recomendado** — cansa menos a vista, especialmente se você programa à noite
 - **Tema claro:** fundo branco, letras escuras. Bom se você tá num ambiente muito iluminado ou prefere tela clara
@@ -148,18 +148,18 @@ Use as **setas do teclado** (↑ ↓) pra navegar e **Enter** pra confirmar.
 
 #### Etapa 2 — Aprovação da chave de API
 
-Se você já configurou uma chave no ambiente, o Claudinho mostra e pergunta se aprova usar essa chave. É só confirmar.
+Se você já configurou uma chave no ambiente, o AndreClaw mostra e pergunta se aprova usar essa chave. É só confirmar.
 
 #### Etapa 3 — Notas de segurança
 
-Dicas importantes que o Claudinho te dá:
+Dicas importantes que o AndreClaw te dá:
 - A IA pode cometer erros — **sempre revise**
 - Cuidado com comandos suspeitos
 - Você tem controle total sobre o que é executado
 
 #### Etapa 4 — Atalhos de teclado (opcional)
 
-O Claudinho pode instalar atalhos recomendados pro seu terminal. Por exemplo:
+O AndreClaw pode instalar atalhos recomendados pro seu terminal. Por exemplo:
 - **Shift+Enter** = cria nova linha sem enviar a mensagem
 - **Tab** = autocomplete
 
@@ -181,7 +181,7 @@ Depois do setup, você vê a interface principal:
 
 ### 4.1. O que é uma chave de API?
 
-Pensa numa chave de API como uma **senha** que permite o Claudinho conversar com serviços de IA. Sem ela, ele não consegue falar com nenhum modelo.
+Pensa numa chave de API como uma **senha** que permite o AndreClaw conversar com serviços de IA. Sem ela, ele não consegue falar com nenhum modelo.
 
 Cada serviço tem sua própria chave:
 - **Anthropic** = `ANTHROPIC_API_KEY` (começa com `sk-ant-`)
@@ -204,7 +204,7 @@ Só funciona naquela janela do terminal:
 $env:OPENAI_API_KEY="sk-sua-chave-aqui"
 $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_MODEL="gpt-4o"
-claudinho
+andreclaw
 ```
 
 **Linux/Mac:**
@@ -212,7 +212,7 @@ claudinho
 export OPENAI_API_KEY=sk-sua-chave-aqui
 export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_MODEL=gpt-4o
-claudinho
+andreclaw
 ```
 
 #### Jeito B: Arquivo `.env` (recomendado)
@@ -225,13 +225,13 @@ OPENAI_API_KEY=sk-sua-chave-aqui
 OPENAI_MODEL=gpt-4o
 ```
 
-Pronto! Toda vez que rodar o Claudinho daquela pasta, ele lê o `.env`.
+Pronto! Toda vez que rodar o AndreClaw daquela pasta, ele lê o `.env`.
 
 > **Dica:** Adicione `.env` no seu `.gitignore` pra nunca subir esse arquivo pro GitHub sem querer.
 
 #### Jeito C: Configuração global (pra sempre)
 
-O Claudinho salva config em `%USERPROFILE%\.claude.json` (Windows) ou `~/.claude.json` (Mac/Linux). Você pode editar esse arquivo e adicionar:
+O AndreClaw salva config em `%USERPROFILE%\.claude.json` (Windows) ou `~/.claude.json` (Mac/Linux). Você pode editar esse arquivo e adicionar:
 
 ```json
 {
@@ -348,7 +348,7 @@ OPENAI_BASE_URL=https://openrouter.ai/api/v1
 
 #### Opção F: Codex (via ChatGPT)
 
-Se você já usa o Codex CLI ou o ChatGPT, o Claudinho lê sua autenticação automaticamente.
+Se você já usa o Codex CLI ou o ChatGPT, o AndreClaw lê sua autenticação automaticamente.
 
 ```env
 CLAUDE_CODE_USE_OPENAI=1
@@ -430,13 +430,13 @@ OPENAI_MODEL=nome-do-modelo
 
 ---
 
-## 5. Features especiais do Claudinho
+## 5. Features especiais do AndreClaw
 
-Essas são as coisas que o Claudinho tem **além** do Claude Code original:
+Essas são as coisas que o AndreClaw tem **além** do Claude Code original:
 
 ### 5.1. Histórico de conversas
 
-O Claudinho salva suas sessões e você pode **ver e navegar** suas conversas anteriores. Assim você não perde o contexto de trabalho entre sessões.
+O AndreClaw salva suas sessões e você pode **ver e navegar** suas conversas anteriores. Assim você não perde o contexto de trabalho entre sessões.
 
 - Até **20 sessões recentes** ficam salvas
 - Ordenadas por data de modificação
@@ -445,22 +445,22 @@ O Claudinho salva suas sessões e você pode **ver e navegar** suas conversas an
 
 ### 5.2. Remoção de guardrails (Modo "Sem Permissão")
 
-Normalmente, o Claudinho **pede permissão** antes de executar cada comando ou editar arquivos. Isso é ótimo pra segurança, mas às vezes você quer que a IA rode solta.
+Normalmente, o AndreClaw **pede permissão** antes de executar cada comando ou editar arquivos. Isso é ótimo pra segurança, mas às vezes você quer que a IA rode solta.
 
 Com o **Modo de Bypass de Permissões** ("Dangerous Mode"):
 - A IA executa comandos e edita arquivos **sem pedir permissão**
 - Tudo fica mais rápido e fluido
 - Mas vem com um aviso: **use só em ambientes isolados (sandbox)** — em projetos reais, a IA pode fazer alterações que você não quer
 
-> **IMPORTANTE:** As verificações de segurança mais críticas continuam ativas mesmo nesse modo. O Claudinho ainda protege arquivos sensíveis como `.git/` e `.claude/`.
+> **IMPORTANTE:** As verificações de segurança mais críticas continuam ativas mesmo nesse modo. O AndreClaw ainda protege arquivos sensíveis como `.git/` e `.claude/`.
 
 ### 5.3. Tradução completa pro Português (PT-BR)
 
-O Claudinho tem **suporte nativo a português brasileiro**:
+O AndreClaw tem **suporte nativo a português brasileiro**:
 
 - **Interface traduzida:** menus, mensagens de erro, dicas de teclado, textos de permissão — tudo em português
-- **Prompts de permissão traduzidos:** quando o Claudinho pergunta "Você quer fazer essa edição em...", aparece em bom português de verdade
-- **Mensagens de despedida cariocas:** quando você sai do Claudinho, as mensagens de adeus são em português com gírias cariocas ("Tamo junto!", "Fui!", "Beleza, até mais!")
+- **Prompts de permissão traduzidos:** quando o AndreClaw pergunta "Você quer fazer essa edição em...", aparece em bom português de verdade
+- **Mensagens de despedida cariocas:** quando você sai do AndreClaw, as mensagens de adeus são em português com gírias cariocas ("Tamo junto!", "Fui!", "Beleza, até mais!")
 - **Descrições de comandos traduzidas**
 
 Para configurar o idioma das respostas da IA:
@@ -471,20 +471,20 @@ Para configurar o idioma das respostas da IA:
 
 Comando interativo que te ajuda a configurar provedores sem precisar mexer em variáveis de ambiente manualmente:
 
-1. Você digita `/provider` no Claudinho
+1. Você digita `/provider` no AndreClaw
 2. Um **assistente passo a passo** aparece
 3. Você escolhe o provedor (OpenAI, Gemini, Ollama, Codex)
 4. Coloca a chave, escolhe o modelo
 5. Pode salvar o perfil pra usar depois
 
 Também tem:
-- **Recomendação automática de provedor** — o Claudinho te sugere o melhor modelo pro seu caso (velocidade, qualidade, código)
+- **Recomendação automática de provedor** — o AndreClaw te sugere o melhor modelo pro seu caso (velocidade, qualidade, código)
 - **Descoberta de modelos** — mostra quais modelos estão instalados/disponíveis
 - **Seleção inteligente pro Ollama** — analisa os modelos locais e sugere o melhor
 
 ### 5.5. Logo e tela de início customizadas
 
-A tela de início do Claudinho tem:
+A tela de início do AndreClaw tem:
 - **Logo em gradient RGB** feito com blocos customizáveis
 - **Tagline:** "Qualquer provedor. Qualquer modelo. De graça, PRA SEMPRE."
 - Configuração editável via `logoConfig.json`
@@ -519,22 +519,22 @@ Um sistema de **classificação com IA** que decide automaticamente se permite o
 
 ## 6. Usando no dia a dia
 
-### 6.1. Rodando o Claudinho
+### 6.1. Rodando o AndreClaw
 
 ```bash
-claudinho
+andreclaw
 ```
 
 Ou indo direto numa pasta de projeto:
 
 ```bash
 cd minha-pasta-do-projeto
-claudinho
+andreclaw
 ```
 
 ### 6.2. Fazendo perguntas e pedidos
 
-Você conversa com o Claudinho como se fosse uma pessoa. Ele consegue:
+Você conversa com o AndreClaw como se fosse uma pessoa. Ele consegue:
 
 | Tipo de comando | Exemplo |
 |-----------------|---------|
@@ -557,7 +557,7 @@ Você conversa com o Claudinho como se fosse uma pessoa. Ele consegue:
 | `/status` | Mostra o status atual da sessão |
 | `/clear` | Limpa o histórico da conversa |
 | `/help` | Mostra ajuda |
-| `/exit` | Sai do Claudinho |
+| `/exit` | Sai do AndreClaw |
 
 ### 6.4. Configuração rápida de provedores com Bun (avançado)
 
@@ -625,7 +625,7 @@ bun run dev:profile:fast -- --bare
 | `CLAUDE_CODE_DEV` | Informa que tá em modo de desenvolvimento |
 | `CLAUDE_CODE_SIMPLE` | Modo mínimo — sem hooks, LSP ou plugins |
 | `CI` | Modo CI — mais rigoroso com autenticação |
-| `OPENCLAUDE_DISABLE_CO_AUTHORED_BY` | Remove o "Co-Authored-By" nos commits git |
+| `ANDRECLAW_DISABLE_CO_AUTHORED_BY` | Remove o "Co-Authored-By" nos commits git |
 | `CLAUDE_CODE_REMOTE` | Habilita o Controle Remoto |
 
 ### 7.3. Diagnóstico e validação (para quem rodou do código fonte)
@@ -655,7 +655,7 @@ bun run typecheck
 
 ### 7.4. Configurações da sessão
 
-O Claudinho salva configurações em:
+O AndreClaw salva configurações em:
 - **Windows:** `%USERPROFILE%\.claude.json`
 - **Mac/Linux:** `~/.claude.json`
 - **Custom:** via variável `CLAUDE_CONFIG_DIR`
@@ -669,27 +669,27 @@ O arquivo de config é JSON e inclui:
 - **ID único** de usuário (gerado aleatoriamente, pra privacidade)
 - **Histórico de dicas** já mostradas
 
-Se o arquivo de config corromper, o Claudinho reseta pra padrão e faz backup do arquivo corrompido.
+Se o arquivo de config corromper, o AndreClaw reseta pra padrão e faz backup do arquivo corrompido.
 
 ---
 
 ## 8. Solução de problemas
 
-### `claudinho: command not found` ou `dist/cli.mjs not found`
+### `andreclaw: command not found` ou `dist/cli.mjs not found`
 
-**O que tá acontecendo:** Ou o Claudinho não foi instalado, ou o terminal não reconheceu o comando ainda.
+**O que tá acontecendo:** Ou o AndreClaw não foi instalado, ou o terminal não reconheceu o comando ainda.
 
 **Como resolver:**
 1. **Se instalou pelo npm:** fecha o terminal, abre outro e tenta de novo
 2. **Se rodou do código fonte:** roda `bun run build` primeiro:
 ```bash
-cd claudinho
+cd andreclaw
 bun run build
 ```
 
 ### `No API key configured` ou erro 401
 
-**O que tá acontecendo:** O Claudinho não encontrou sua chave de API, ou ela tá errada.
+**O que tá acontecendo:** O AndreClaw não encontrou sua chave de API, ou ela tá errada.
 
 **Como resolver:**
 1. Confirma que configurou as variáveis:
@@ -707,7 +707,7 @@ echo $OPENAI_API_KEY
 
 ### `ripgrep not found`
 
-**O que tá acontecendo:** O Claudinho precisa do `ripgrep` (um buscador de texto super-rápido) instalado no sistema.
+**O que tá acontecendo:** O AndreClaw precisa do `ripgrep` (um buscador de texto super-rápido) instalado no sistema.
 
 **Como resolver:**
 - **Windows:** `winget install BurntSushi.ripgrep.MSVC` ou `choco install ripgrep`
@@ -723,7 +723,7 @@ Depois confirma: `rg --version`
 **Como resolver:**
 1. Gera uma chave nova no painel do provedor
 2. Copia **inteira** (seleciona direitinho, sem espaço extra)
-3. Cola de novo e roda o Claudinho
+3. Cola de novo e roda o AndreClaw
 
 ### Ollama não conecta
 
@@ -740,10 +740,10 @@ Depois confirma: `rg --version`
 
 **Como resolver:**
 ```bash
-chmod +x $(which claudinho)
+chmod +x $(which andreclaw)
 ```
 
-### O Claudinho tá muito lento
+### O AndreClaw tá muito lento
 
 **Possíveis causas:**
 - Modelo muito grande pro seu PC (Ollama)
@@ -755,14 +755,14 @@ chmod +x $(which claudinho)
 - Troca pra outro provedor
 - Roda `bun run doctor:runtime` pra diagnosticar
 
-### O Claudinho não acha meus arquivos
+### O AndreClaw não acha meus arquivos
 
 **Causa:** Tá na pasta errada.
 
-**Como resolver:** Navega até a pasta do projeto ANTES de rodar o `claudinho`:
+**Como resolver:** Navega até a pasta do projeto ANTES de rodar o `andreclaw`:
 ```bash
 cd /caminho/correto/do/projeto
-claudinho
+andreclaw
 ```
 
 ---
@@ -778,7 +778,7 @@ claudinho
 
 ### Revise o que a IA faz
 
-O Claudinho pode editar, criar e deletar arquivos no seu projeto. Ele geralmente pede permissão, mas:
+O AndreClaw pode editar, criar e deletar arquivos no seu projeto. Ele geralmente pede permissão, mas:
 
 - **Sempre leia** o que ele vai mudar antes de aprovar
 - A IA pode ser "enganada" por código malicioso (isso se chama "injeção de prompt")
@@ -794,7 +794,7 @@ O Modo Bypass faz a IA executar comandos sem pedir permissão. É conveniente ma
 
 ### Verificações de segurança que NUNCA são desligadas
 
-Mesmo no Modo Bypass, o Claudinho protege:
+Mesmo no Modo Bypass, o AndreClaw protege:
 - Pastas `.git/` (onde ficam seus commits)
 - Pastas `.claude/` (onde ficam suas configurações)
 - Arquivos sensíveis do sistema
@@ -804,7 +804,7 @@ Mesmo no Modo Bypass, o Claudinho protege:
 Novas versões corrigem bugs e melhoram segurança. Atualize regularmente:
 
 ```bash
-npm update -g @touchzada/claudinho
+npm update -g andreclaw
 ```
 
 ### Como desinstalar
@@ -812,25 +812,25 @@ npm update -g @touchzada/claudinho
 Se não quiser mais usar:
 
 ```bash
-npm uninstall -g @touchzada/claudinho
+npm uninstall -g andreclaw
 ```
 
 ---
 
-## Atualizando o Claudinho
+## Atualizando o AndreClaw
 
 ```bash
-npm install -g @touchzada/claudinho@latest
+npm install -g andreclaw@latest
 ```
 
 ---
 
 ## Links úteis
 
-- **Repositório:** <https://github.com/Gitlawb/claudinho>
-- **Reportar bugs:** <https://github.com/Gitlawb/claudinho/issues>
-- **Documentação original (em inglês):** <https://github.com/Gitlawb/claudinho/blob/main/README.md>
+- **Repositório:** <https://github.com/andrelucas/andreclaw>
+- **Reportar bugs:** <https://github.com/andrelucas/andreclaw/issues>
+- **Documentação original (em inglês):** <https://github.com/andrelucas/andreclaw/blob/main/README.md>
 
 ---
 
-*Feito com carinho pro dev brasileiro. Claudinho — qualquer provedor, qualquer modelo, de graça pra sempre.*
+*Feito com carinho pro dev brasileiro. AndreClaw — qualquer provedor, qualquer modelo, de graça pra sempre.*
