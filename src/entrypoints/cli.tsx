@@ -165,6 +165,15 @@ async function main(): Promise<void> {
   const { printStartupScreen } = await import('../components/StartupScreen.js')
   printStartupScreen()
 
+  // Check for updates (non-blocking, cached for 6h)
+  try {
+    const { checkForUpdates, printUpdateBanner } = await import('../utils/updateChecker.js')
+    const updateResult = await checkForUpdates()
+    printUpdateBanner(updateResult)
+  } catch {
+    // Update check is best-effort — never block startup
+  }
+
   // For all other paths, load the startup profiler
   const {
     profileCheckpoint
