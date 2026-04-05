@@ -1,9 +1,3 @@
-ESSE PROJETO É BASEADO NO ANDRECLAW!
-<img width="1919" height="1027" alt="print1" src="https://github.com/user-attachments/assets/96ae02ff-9cd5-4fba-a255-2ed2ff7255ab" />
-<img width="1908" height="345" alt="print2" src="https://github.com/user-attachments/assets/116a57c2-b49a-4ede-b75c-4bb6d2996e99" />
-<img width="1902" height="816" alt="print3" src="https://github.com/user-attachments/assets/7615b6d3-ed40-4851-9d76-b4c93a0d199b" />
-<img width="859" height="378" alt="print4" src="https://github.com/user-attachments/assets/682c6dc6-77e1-46c1-b432-fe1bfead9551" />
-
 # AndreClaw
 
 
@@ -204,8 +198,8 @@ src/utils/auth.ts                — Reconhece OpenAI como provedor válido
 
 ## Links
 
-- [Repositório](https://github.com/andrelucas/andreclaw)
-- [Reportar bugs](https://github.com/andrelucas/andreclaw/issues)
+- [Repositório](https://github.com/andrezaolucas/andreclaw)
+- [Reportar bugs](https://github.com/andrezaolucas/andreclaw/issues)
 - [Guia em Português](GUIA_INICIO.md)
 - [Configuração Avançada](docs/advanced-setup.md)
 
