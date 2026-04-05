@@ -1,6 +1,6 @@
 {
   "name": "andreclaw",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "AndreClaw — Terminal de IA com qualquer modelo",
   "type": "module",
   "bin": {
