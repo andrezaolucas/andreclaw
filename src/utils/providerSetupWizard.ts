@@ -10,7 +10,7 @@
 import { createInterface } from 'readline'
 import { homedir } from 'os'
 import { join } from 'path'
-import { writeFileSync, existsSync } from 'fs'
+import { writeFileSync, existsSync, readFileSync } from 'fs'
 import {
   type ProfileFile,
   type ProviderProfile,
@@ -132,7 +132,7 @@ function question(rl: ReturnType<typeof createInterface>, prompt: string): Promi
   })
 }
 
-async function selectProvider(rl: ReturnType<typeof createInterface>): Promise<ProviderOption> {
+async function selectProvider(rl: ReturnType<typeof createInterface>): Promise<ProviderOption | null> {
   console.log('')
   console.log(`${BOLD}${CYAN}  Escolha seu provedor de IA:${RESET}`)
   console.log('')
@@ -144,14 +144,20 @@ async function selectProvider(rl: ReturnType<typeof createInterface>): Promise<P
   }
 
   console.log('')
+  console.log(`  ${DIM}0) Pular — ja tenho configurado / vou configurar depois${RESET}`)
+  console.log('')
 
   while (true) {
-    const answer = await question(rl, `  ${WHITE}Digite o numero (1-${PROVIDERS.length}): ${RESET}`)
+    const answer = await question(rl, `  ${WHITE}Digite o numero (0-${PROVIDERS.length}): ${RESET}`)
+    const lower = answer.toLowerCase()
+    if (lower === '0' || lower === 'sair' || lower === 'pular' || lower === 'skip' || lower === 'exit') {
+      return null
+    }
     const num = parseInt(answer, 10)
     if (num >= 1 && num <= PROVIDERS.length) {
       return PROVIDERS[num - 1]
     }
-    console.log(`  ${YELLOW}Numero invalido. Tente de novo.${RESET}`)
+    console.log(`  ${YELLOW}Numero invalido. Digite 1-${PROVIDERS.length} ou 0 pra pular.${RESET}`)
   }
 }
 
@@ -271,6 +277,19 @@ export function shouldRunSetupWizard(): boolean {
   if (hasExplicitProviderSelection()) return false
   if (process.env.ANTHROPIC_API_KEY) return false
 
+  // Check if user already completed Anthropic onboarding (has OAuth or API key configured)
+  try {
+    const claudeConfigPath = join(homedir(), '.claude.json')
+    if (existsSync(claudeConfigPath)) {
+      const config = JSON.parse(readFileSync(claudeConfigPath, 'utf8'))
+      if (config.hasCompletedOnboarding || config.oauthAccount || config.primaryApiKey) {
+        return false
+      }
+    }
+  } catch {
+    // Ignore parse errors
+  }
+
   // Check for profile in home dir and current dir
   const homeProfile = join(homedir(), PROFILE_FILE_NAME)
   const cwdProfile = join(process.cwd(), PROFILE_FILE_NAME)
@@ -299,6 +318,14 @@ export async function runSetupWizard(): Promise<boolean> {
     console.log(`  ${DIM}Isso so precisa ser feito uma vez.${RESET}`)
 
     const provider = await selectProvider(rl)
+    if (!provider) {
+      console.log('')
+      console.log(`  ${DIM}Pulado. Configure manualmente com variaveis de ambiente ou rode andreclaw de novo.${RESET}`)
+      console.log('')
+      rl.close()
+      return true // Return true so CLI continues normally (falls through to Anthropic onboarding)
+    }
+
     let apiKey: string | null = null
 
     if (provider.needsKey) {
