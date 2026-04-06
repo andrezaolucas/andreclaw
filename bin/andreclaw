@@ -7,7 +7,7 @@
  * Caso contrário, avisa o usuário pra compilar primeiro ou usar `bun run dev`.
  */
 
-import { existsSync, mkdirSync, copyFileSync } from 'fs'
+import { existsSync, mkdirSync, readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { homedir } from 'os'
 import { fileURLToPath, pathToFileURL } from 'url'
@@ -19,6 +19,15 @@ if (!existsSync(andreClawDir)) {
   mkdirSync(andreClawDir, { recursive: true })
 }
 process.env.CLAUDE_CONFIG_DIR = andreClawDir
+
+// Auto-cd pro vault salvo (se existir e nao foi passado argumento de diretorio)
+const vaultPathFile = join(andreClawDir, '.vault-path')
+if (existsSync(vaultPathFile) && !process.argv.includes('-p') && !process.argv.includes('--project')) {
+  const savedVault = readFileSync(vaultPathFile, 'utf8').trim()
+  if (savedVault && existsSync(savedVault)) {
+    process.chdir(savedVault)
+  }
+}
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const distPath = join(__dirname, '..', 'dist', 'cli.mjs')

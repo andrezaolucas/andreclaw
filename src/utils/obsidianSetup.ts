@@ -777,6 +777,7 @@ export async function runObsidianSetup(): Promise<void> {
     if (hasAndreclawSetup(vaultPath)) {
       console.log(`  ${GREEN}Vault ja configurado!${RESET} ${DIM}(ANDRECLAW.md encontrado)${RESET}`)
       console.log('')
+      saveVaultPath(vaultPath)
       markSetupDone()
       rl.close()
       return
@@ -791,6 +792,9 @@ export async function runObsidianSetup(): Promise<void> {
     console.log(`  ${CYAN}Criando estrutura do vault...${RESET}`)
 
     createVaultStructure(vaultPath, userName || 'Usuario', userStack || '')
+
+    // Salva o caminho do vault pra auto-cd nas proximas execucoes
+    saveVaultPath(vaultPath)
 
     console.log('')
     console.log(`${BOLD}${GREEN}  Vault configurado com sucesso!${RESET}`)
@@ -825,6 +829,12 @@ export async function runObsidianSetup(): Promise<void> {
   } catch {
     rl.close()
   }
+}
+
+function saveVaultPath(vaultPath: string): void {
+  const configDir = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.andreclaw')
+  if (!existsSync(configDir)) mkdirSync(configDir, { recursive: true })
+  writeFileSync(join(configDir, '.vault-path'), vaultPath, 'utf8')
 }
 
 function markSetupDone(): void {
