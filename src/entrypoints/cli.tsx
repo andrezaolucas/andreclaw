@@ -172,6 +172,14 @@ async function main(): Promise<void> {
 
   validateProviderEnvOrExit()
 
+  // Obsidian Second Brain setup — runs once after provider setup
+  {
+    const { shouldRunObsidianSetup, runObsidianSetup } = await import('../utils/obsidianSetup.js')
+    if (shouldRunObsidianSetup()) {
+      await runObsidianSetup()
+    }
+  }
+
   // Print the gradient startup screen before the Ink UI loads
   const { printStartupScreen } = await import('../components/StartupScreen.js')
   printStartupScreen()
