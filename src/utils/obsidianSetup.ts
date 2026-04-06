@@ -142,6 +142,8 @@ function configureObsidianSettings(vaultPath: string): void {
     foldIndent: true,                  // permite dobrar indentacoes
     showFrontmatter: true,             // mostra frontmatter YAML
     autoConvertHtml: true,             // converte HTML pra markdown
+    defaultViewMode: 'source',         // modo source por padrao
+    spellcheck: true,                  // spellcheck ativado
   })
   writeFileSync(appConfigPath, JSON.stringify(appConfig, null, 2), 'utf8')
 
@@ -151,6 +153,7 @@ function configureObsidianSettings(vaultPath: string): void {
     folder: 'Daily',
     format: 'YYYY-MM-DD',
     template: 'Templates/daily-note.md',
+    autorun: false,
   }, null, 2), 'utf8')
 
   // templates.json — config do plugin Templates
@@ -646,6 +649,44 @@ Responda em PT-BR.
 
   // Configure Obsidian internal settings
   configureObsidianSettings(vaultPath)
+
+  // Install kepano's official Obsidian skills
+  installObsidianSkills(vaultPath)
+}
+
+// ─── Kepano's Obsidian Skills ────────────────────────────────────────
+
+function installObsidianSkills(vaultPath: string): void {
+  const skillsDir = join(vaultPath, '.andreclaw', 'skills')
+  if (!existsSync(skillsDir)) mkdirSync(skillsDir, { recursive: true })
+
+  // Check if already installed
+  if (existsSync(join(skillsDir, 'obsidian-cli', 'skill.md'))) return
+
+  try {
+    const tmpDir = join(homedir(), '.andreclaw', '.tmp-obsidian-skills')
+
+    // Clone kepano's repo
+    execSync(`git clone --depth 1 https://github.com/kepano/obsidian-skills.git "${tmpDir}" 2>/dev/null`, {
+      stdio: 'pipe',
+      timeout: 30000,
+    })
+
+    // Copy skills
+    const skillNames = ['obsidian-markdown', 'obsidian-bases', 'json-canvas', 'obsidian-cli', 'defuddle']
+    for (const skill of skillNames) {
+      const src = join(tmpDir, 'skills', skill)
+      const dest = join(skillsDir, skill)
+      if (existsSync(src) && !existsSync(dest)) {
+        execSync(`cp -r "${src}" "${dest}"`, { stdio: 'pipe' })
+      }
+    }
+
+    // Cleanup
+    try { execSync(`rm -rf "${tmpDir}"`, { stdio: 'pipe' }) } catch {}
+  } catch {
+    // Git not available or network error — skip silently
+  }
 }
 
 // ─── Main ────────────────────────────────────────────────────────────
@@ -767,6 +808,16 @@ export async function runObsidianSetup(): Promise<void> {
     console.log(`    ${BOLD}/handover${RESET}  — encerrar sessao com resumo`)
     console.log(`    ${BOLD}/resume${RESET}    — retomar de onde parou`)
     console.log(`    ${BOLD}/my-world${RESET}  — visao geral completa`)
+    console.log('')
+    console.log(`  ${WHITE}.obsidian/ configurado:${RESET}`)
+    console.log(`    ${DIM}Wikilinks, Daily Notes, Templates, Spellcheck PT-BR${RESET}`)
+    console.log(`    ${DIM}Skills do kepano (obsidian-cli, markdown, bases, canvas, defuddle)${RESET}`)
+    console.log('')
+    console.log(`  ${YELLOW}IMPORTANTE — Passo manual:${RESET}`)
+    console.log(`  ${WHITE}Abra o Obsidian > Configuracoes > Avancado > Interface de linha de comando > Ativar${RESET}`)
+    console.log(`  ${DIM}Isso ativa o comando "obsidian" no terminal pra buscas rapidas.${RESET}`)
+    console.log(`  ${DIM}Nota: requer licenca Catalyst do Obsidian. Sem ela, o AndreClaw${RESET}`)
+    console.log(`  ${DIM}funciona normalmente mas sem o CLI do Obsidian.${RESET}`)
     console.log('')
 
     markSetupDone()
