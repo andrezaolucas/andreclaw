@@ -278,10 +278,25 @@ export function shouldRunSetupWizard(): boolean {
   if (process.env.ANTHROPIC_API_KEY) return false
 
   // Check if user already completed Anthropic onboarding (has OAuth or API key configured)
+  // Uses getGlobalClaudeFile() which respects CLAUDE_CONFIG_DIR
   try {
-    const claudeConfigPath = join(homedir(), '.claude.json')
+    const { getGlobalClaudeFile } = require('./env.js')
+    const claudeConfigPath = getGlobalClaudeFile()
     if (existsSync(claudeConfigPath)) {
       const config = JSON.parse(readFileSync(claudeConfigPath, 'utf8'))
+      if (config.hasCompletedOnboarding || config.oauthAccount || config.primaryApiKey) {
+        return false
+      }
+    }
+  } catch {
+    // Ignore parse errors
+  }
+
+  // Fallback: also check the default ~/.claude.json for users with Claude Code installed
+  try {
+    const defaultConfigPath = join(homedir(), '.claude.json')
+    if (existsSync(defaultConfigPath)) {
+      const config = JSON.parse(readFileSync(defaultConfigPath, 'utf8'))
       if (config.hasCompletedOnboarding || config.oauthAccount || config.primaryApiKey) {
         return false
       }
