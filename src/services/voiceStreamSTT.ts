@@ -147,7 +147,7 @@ export async function connectVoiceStream(
     channels: '1',
     endpointing_ms: '300',
     utterance_end_ms: '1000',
-    language: options?.language ?? 'en',
+    language: options?.language ?? 'auto',
   })
 
   // Route through conversation-engine with Deepgram Nova 3 (bypassing

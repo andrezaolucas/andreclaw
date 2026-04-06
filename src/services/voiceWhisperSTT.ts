@@ -227,7 +227,7 @@ export async function connectVoiceStream(
   }
 
   const modelPath = findWhisperModel()
-  const lang = options?.language ?? 'en'
+  const lang = options?.language ?? 'auto'
 
   const audioChunks: Buffer[] = []
   let totalBytes = 0
