@@ -86,6 +86,25 @@ const teamMemPaths = feature('TEAMMEM')
 
 let hasLoggedInitialLoad = false
 
+/**
+ * Returns the preferred config paths for a directory, checking .andreclaw/ANDRECLAW.md first,
+ * then falling back to .claude/CLAUDE.md.
+ */
+function getConfigPaths(dir: string) {
+  const fs = getFsImplementation()
+  return {
+    projectMd: fs.existsSync(join(dir, 'ANDRECLAW.md'))
+      ? join(dir, 'ANDRECLAW.md')
+      : join(dir, 'CLAUDE.md'),
+    dotDir: fs.existsSync(join(dir, '.andreclaw'))
+      ? join(dir, '.andreclaw')
+      : join(dir, '.claude'),
+    localMd: fs.existsSync(join(dir, 'ANDRECLAW.local.md'))
+      ? join(dir, 'ANDRECLAW.local.md')
+      : join(dir, 'CLAUDE.local.md'),
+  }
+}
+
 const MEMORY_INSTRUCTION_PROMPT =
   'Codebase and user instructions are shown below. Be sure to adhere to these instructions. IMPORTANT: These instructions OVERRIDE any default behavior and you MUST follow them exactly as written.'
 // Recommended max character count for a memory file
@@ -885,7 +904,8 @@ export const getMemoryFiles = memoize(
 
       // Try reading CLAUDE.md (Project) - only if projectSettings is enabled
       if (isSettingSourceEnabled('projectSettings') && !skipProject) {
-        const projectPath = join(dir, 'CLAUDE.md')
+        const configPaths = getConfigPaths(dir)
+        const projectPath = configPaths.projectMd
         result.push(
           ...(await processMemoryFile(
             projectPath,
@@ -896,7 +916,8 @@ export const getMemoryFiles = memoize(
         )
 
         // Try reading .claude/CLAUDE.md (Project)
-        const dotClaudePath = join(dir, '.claude', 'CLAUDE.md')
+        const dotDirMdName = configPaths.dotDir.endsWith('.andreclaw') ? 'ANDRECLAW.md' : 'CLAUDE.md'
+        const dotClaudePath = join(configPaths.dotDir, dotDirMdName)
         result.push(
           ...(await processMemoryFile(
             dotClaudePath,
@@ -907,7 +928,7 @@ export const getMemoryFiles = memoize(
         )
 
         // Try reading .claude/rules/*.md files (Project)
-        const rulesDir = join(dir, '.claude', 'rules')
+        const rulesDir = join(configPaths.dotDir, 'rules')
         result.push(
           ...(await processMdRules({
             rulesDir,
@@ -921,7 +942,8 @@ export const getMemoryFiles = memoize(
 
       // Try reading CLAUDE.local.md (Local) - only if localSettings is enabled
       if (isSettingSourceEnabled('localSettings')) {
-        const localPath = join(dir, 'CLAUDE.local.md')
+        const configPaths = getConfigPaths(dir)
+        const localPath = configPaths.localMd
         result.push(
           ...(await processMemoryFile(
             localPath,
@@ -941,7 +963,8 @@ export const getMemoryFiles = memoize(
       const additionalDirs = getAdditionalDirectoriesForClaudeMd()
       for (const dir of additionalDirs) {
         // Try reading CLAUDE.md from the additional directory
-        const projectPath = join(dir, 'CLAUDE.md')
+        const addConfigPaths = getConfigPaths(dir)
+        const projectPath = addConfigPaths.projectMd
         result.push(
           ...(await processMemoryFile(
             projectPath,
@@ -952,7 +975,8 @@ export const getMemoryFiles = memoize(
         )
 
         // Try reading .claude/CLAUDE.md from the additional directory
-        const dotClaudePath = join(dir, '.claude', 'CLAUDE.md')
+        const addDotDirMdName = addConfigPaths.dotDir.endsWith('.andreclaw') ? 'ANDRECLAW.md' : 'CLAUDE.md'
+        const dotClaudePath = join(addConfigPaths.dotDir, addDotDirMdName)
         result.push(
           ...(await processMemoryFile(
             dotClaudePath,
@@ -963,7 +987,7 @@ export const getMemoryFiles = memoize(
         )
 
         // Try reading .claude/rules/*.md files from the additional directory
-        const rulesDir = join(dir, '.claude', 'rules')
+        const rulesDir = join(addConfigPaths.dotDir, 'rules')
         result.push(
           ...(await processMdRules({
             rulesDir,
@@ -1254,8 +1278,9 @@ export async function getMemoryFilesForNestedDirectory(
   const result: MemoryFileInfo[] = []
 
   // Process project memory files (CLAUDE.md and .claude/CLAUDE.md)
+  const nestedConfigPaths = getConfigPaths(dir)
   if (isSettingSourceEnabled('projectSettings')) {
-    const projectPath = join(dir, 'CLAUDE.md')
+    const projectPath = nestedConfigPaths.projectMd
     result.push(
       ...(await processMemoryFile(
         projectPath,
@@ -1264,7 +1289,8 @@ export async function getMemoryFilesForNestedDirectory(
         false,
       )),
     )
-    const dotClaudePath = join(dir, '.claude', 'CLAUDE.md')
+    const nestedDotDirMdName = nestedConfigPaths.dotDir.endsWith('.andreclaw') ? 'ANDRECLAW.md' : 'CLAUDE.md'
+    const dotClaudePath = join(nestedConfigPaths.dotDir, nestedDotDirMdName)
     result.push(
       ...(await processMemoryFile(
         dotClaudePath,
@@ -1277,13 +1303,13 @@ export async function getMemoryFilesForNestedDirectory(
 
   // Process local memory file (CLAUDE.local.md)
   if (isSettingSourceEnabled('localSettings')) {
-    const localPath = join(dir, 'CLAUDE.local.md')
+    const localPath = nestedConfigPaths.localMd
     result.push(
       ...(await processMemoryFile(localPath, 'Local', processedPaths, false)),
     )
   }
 
-  const rulesDir = join(dir, '.claude', 'rules')
+  const rulesDir = join(nestedConfigPaths.dotDir, 'rules')
 
   // Process project unconditional .claude/rules/*.md files, which were not eagerly loaded
   // Use a separate processedPaths set to avoid marking conditional rule files as processed
@@ -1331,7 +1357,8 @@ export async function getConditionalRulesForCwdLevelDirectory(
   targetPath: string,
   processedPaths: Set<string>,
 ): Promise<MemoryFileInfo[]> {
-  const rulesDir = join(dir, '.claude', 'rules')
+  const cwdConfigPaths = getConfigPaths(dir)
+  const rulesDir = join(cwdConfigPaths.dotDir, 'rules')
   return processConditionedMdRules(
     targetPath,
     rulesDir,
@@ -1435,15 +1462,16 @@ export async function shouldShowClaudeMdExternalIncludesWarning(): Promise<boole
 export function isMemoryFilePath(filePath: string): boolean {
   const name = basename(filePath)
 
-  // CLAUDE.md or CLAUDE.local.md anywhere
-  if (name === 'CLAUDE.md' || name === 'CLAUDE.local.md') {
+  // CLAUDE.md, CLAUDE.local.md, ANDRECLAW.md, or ANDRECLAW.local.md anywhere
+  if (name === 'CLAUDE.md' || name === 'CLAUDE.local.md' || name === 'ANDRECLAW.md' || name === 'ANDRECLAW.local.md') {
     return true
   }
 
-  // .md files in .claude/rules/ directories
+  // .md files in .claude/rules/ or .andreclaw/rules/ directories
   if (
     name.endsWith('.md') &&
-    filePath.includes(`${sep}.claude${sep}rules${sep}`)
+    (filePath.includes(`${sep}.claude${sep}rules${sep}`) ||
+     filePath.includes(`${sep}.andreclaw${sep}rules${sep}`))
   ) {
     return true
   }

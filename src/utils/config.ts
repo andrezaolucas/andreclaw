@@ -1786,14 +1786,23 @@ export function recordFirstStartTime(): void {
 
 export function getMemoryPath(memoryType: MemoryType): string {
   const cwd = getOriginalCwd()
+  const fs = getFsImplementation()
 
   switch (memoryType) {
-    case 'User':
-      return join(getClaudeConfigHomeDir(), 'CLAUDE.md')
+    case 'User': {
+      const userDir = getClaudeConfigHomeDir()
+      return fs.existsSync(join(userDir, 'ANDRECLAW.md'))
+        ? join(userDir, 'ANDRECLAW.md')
+        : join(userDir, 'CLAUDE.md')
+    }
     case 'Local':
-      return join(cwd, 'CLAUDE.local.md')
+      return fs.existsSync(join(cwd, 'ANDRECLAW.local.md'))
+        ? join(cwd, 'ANDRECLAW.local.md')
+        : join(cwd, 'CLAUDE.local.md')
     case 'Project':
-      return join(cwd, 'CLAUDE.md')
+      return fs.existsSync(join(cwd, 'ANDRECLAW.md'))
+        ? join(cwd, 'ANDRECLAW.md')
+        : join(cwd, 'CLAUDE.md')
     case 'Managed':
       return join(getManagedFilePath(), 'CLAUDE.md')
     case 'AutoMem':
@@ -1807,7 +1816,12 @@ export function getMemoryPath(memoryType: MemoryType): string {
 }
 
 export function getManagedClaudeRulesDir(): string {
-  return join(getManagedFilePath(), '.claude', 'rules')
+  const managedPath = getManagedFilePath()
+  const fs = getFsImplementation()
+  const dotDir = fs.existsSync(join(managedPath, '.andreclaw'))
+    ? '.andreclaw'
+    : '.claude'
+  return join(managedPath, dotDir, 'rules')
 }
 
 export function getUserClaudeRulesDir(): string {

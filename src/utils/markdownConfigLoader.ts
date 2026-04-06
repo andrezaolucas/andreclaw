@@ -1,5 +1,5 @@
 import { feature } from 'bun:bundle'
-import { statSync } from 'fs'
+import { existsSync, statSync } from 'fs'
 import { lstat, readdir, readFile, realpath, stat } from 'fs/promises'
 import memoize from 'lodash-es/memoize.js'
 import { homedir } from 'os'
@@ -250,6 +250,8 @@ export function getProjectDirsUpToHome(
       break
     }
 
+    // Check .andreclaw first, fall back to .claude
+    const andreclawSubdir = join(current, '.andreclaw', subdir)
     const claudeSubdir = join(current, '.claude', subdir)
     // Filter to existing dirs. This is a perf filter (avoids spawning
     // ripgrep on non-existent dirs downstream) and the worktree fallback
@@ -257,11 +259,21 @@ export function getProjectDirsUpToHome(
     // handling instead of existsSync — re-throws unexpected errors rather
     // than silently swallowing them. Downstream loadMarkdownFiles handles
     // the TOCTOU window (dir disappearing before read) gracefully.
+    let foundConfigSubdir = false
     try {
-      statSync(claudeSubdir)
-      dirs.push(claudeSubdir)
+      statSync(andreclawSubdir)
+      dirs.push(andreclawSubdir)
+      foundConfigSubdir = true
     } catch (e: unknown) {
       if (!isFsInaccessible(e)) throw e
+    }
+    if (!foundConfigSubdir) {
+      try {
+        statSync(claudeSubdir)
+        dirs.push(claudeSubdir)
+      } catch (e: unknown) {
+        if (!isFsInaccessible(e)) throw e
+      }
     }
 
     // Stop after processing the git root directory - this prevents commands from parent
@@ -301,7 +313,9 @@ export const loadMarkdownFilesForSubdir = memoize(
   ): Promise<MarkdownFile[]> {
     const searchStartTime = Date.now()
     const userDir = join(getClaudeConfigHomeDir(), subdir)
-    const managedDir = join(getManagedFilePath(), '.claude', subdir)
+    const managedPath = getManagedFilePath()
+    const managedDotDir = existsSync(join(managedPath, '.andreclaw')) ? '.andreclaw' : '.claude'
+    const managedDir = join(managedPath, managedDotDir, subdir)
     const projectDirs = getProjectDirsUpToHome(subdir, cwd)
 
     // For git worktrees where the worktree does NOT have .claude/<subdir> checked
@@ -320,14 +334,16 @@ export const loadMarkdownFilesForSubdir = memoize(
     const gitRoot = findGitRoot(cwd)
     const canonicalRoot = findCanonicalGitRoot(cwd)
     if (gitRoot && canonicalRoot && canonicalRoot !== gitRoot) {
+      const worktreeDotDir = existsSync(join(gitRoot, '.andreclaw')) ? '.andreclaw' : '.claude'
       const worktreeSubdir = normalizePathForComparison(
-        join(gitRoot, '.claude', subdir),
+        join(gitRoot, worktreeDotDir, subdir),
       )
       const worktreeHasSubdir = projectDirs.some(
         dir => normalizePathForComparison(dir) === worktreeSubdir,
       )
       if (!worktreeHasSubdir) {
-        const mainClaudeSubdir = join(canonicalRoot, '.claude', subdir)
+        const canonicalDotDir = existsSync(join(canonicalRoot, '.andreclaw')) ? '.andreclaw' : '.claude'
+        const mainClaudeSubdir = join(canonicalRoot, canonicalDotDir, subdir)
         if (!projectDirs.includes(mainClaudeSubdir)) {
           projectDirs.push(mainClaudeSubdir)
         }

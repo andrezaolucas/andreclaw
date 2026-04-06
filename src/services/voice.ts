@@ -17,14 +17,18 @@ import { getPlatform } from '../utils/platform.js'
 // (post-wake, post-boot). Load happens on first voice keypress — no
 // preload, because there's no way to make dlopen non-blocking and a
 // startup freeze is worse than a first-press delay.
-// AndreClaw: audio-capture-napi is not available in the open build.
-// Provide a stub that always reports native audio as unavailable,
-// forcing the fallback to SoX/arecord.
+// AndreClaw: try loading native audio-capture.node from vendor/,
+// fall back to stub if not available.
 type AudioNapi = {
   isNativeAudioAvailable: () => boolean
   isNativeRecordingActive: () => boolean
   startNativeRecording: (onData: (data: Buffer) => void, onEnd: () => void) => boolean
   stopNativeRecording: () => void
+  startNativePlayback?: (sampleRate: number, channels: number) => boolean
+  writeNativePlaybackData?: (buf: Buffer) => boolean
+  stopNativePlayback?: () => void
+  isNativePlaying?: () => boolean
+  microphoneAuthorizationStatus?: () => number
 }
 const AUDIO_NAPI_STUB: AudioNapi = {
   isNativeAudioAvailable: () => false,
@@ -36,7 +40,65 @@ let audioNapi: AudioNapi | null = AUDIO_NAPI_STUB
 let audioNapiPromise: Promise<AudioNapi> | null = null
 
 function loadAudioNapi(): Promise<AudioNapi> {
-  audioNapiPromise ??= Promise.resolve(AUDIO_NAPI_STUB)
+  if (!audioNapiPromise) {
+    audioNapiPromise = (async () => {
+      const platform = process.platform
+      const arch = process.arch
+      if (platform !== 'darwin' && platform !== 'linux' && platform !== 'win32') {
+        return AUDIO_NAPI_STUB
+      }
+
+      const key = `${arch}-${platform}`
+
+      try {
+        const { createRequire } = await import('module')
+        const { fileURLToPath } = await import('url')
+        const { dirname, join } = await import('path')
+
+        let baseDir: string
+        try {
+          baseDir = dirname(fileURLToPath(import.meta.url))
+        } catch {
+          baseDir = __dirname || '.'
+        }
+
+        const paths = [
+          process.env.AUDIO_CAPTURE_NODE_PATH,
+          join(baseDir, 'vendor', 'audio-capture', key, 'audio-capture.node'),
+          join(baseDir, '..', 'vendor', 'audio-capture', key, 'audio-capture.node'),
+        ].filter(Boolean) as string[]
+
+        const req = createRequire(import.meta.url)
+
+        for (const p of paths) {
+          try {
+            const native = req(p)
+            const wrapped: AudioNapi = {
+              isNativeAudioAvailable: () => true,
+              isNativeRecordingActive: () => native.isRecording?.() ?? false,
+              startNativeRecording: (onData, onEnd) => native.startRecording?.(onData, onEnd) ?? false,
+              stopNativeRecording: () => native.stopRecording?.(),
+              startNativePlayback: (sr, ch) => native.startPlayback?.(sr, ch) ?? false,
+              writeNativePlaybackData: (buf) => native.writePlaybackData?.(buf) ?? false,
+              stopNativePlayback: () => native.stopPlayback?.(),
+              isNativePlaying: () => native.isPlaying?.() ?? false,
+              microphoneAuthorizationStatus: () => native.microphoneAuthorizationStatus?.() ?? 0,
+            }
+            audioNapi = wrapped
+            logForDebugging(`[voice] Loaded native audio from ${p}`)
+            return wrapped
+          } catch {
+            // try next path
+          }
+        }
+      } catch (e) {
+        logForDebugging(`[voice] Failed to load native audio: ${e}`)
+      }
+
+      logForDebugging('[voice] Native audio not available, falling back to SoX/arecord')
+      return AUDIO_NAPI_STUB
+    })()
+  }
   return audioNapiPromise
 }
 
