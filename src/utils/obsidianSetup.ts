@@ -770,6 +770,23 @@ export async function runObsidianSetup(): Promise<void> {
         rl.close()
         return
       }
+
+      // Verificar se e um vault Obsidian de verdade
+      if (!isInsideObsidianVault(expandedPath)) {
+        console.log('')
+        console.log(`  ${YELLOW}Essa pasta nao e um vault do Obsidian${RESET} ${DIM}(nao tem .obsidian/)${RESET}`)
+        console.log('')
+        console.log(`  ${WHITE}Abra o Obsidian primeiro e crie um vault nessa pasta,${RESET}`)
+        console.log(`  ${WHITE}ou informe o caminho correto de um vault que ja existe.${RESET}`)
+        console.log('')
+        console.log(`  ${DIM}Dica: no Obsidian, va em "Open folder as vault" e selecione a pasta.${RESET}`)
+        console.log(`  ${DIM}Depois rode andreclaw de novo.${RESET}`)
+        console.log('')
+        markSetupDone()
+        rl.close()
+        return
+      }
+
       vaultPath = expandedPath
     }
 
