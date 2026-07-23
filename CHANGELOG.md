@@ -5,6 +5,34 @@ Todos os changes relevantes do AndreClaw sao documentados aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 e versionamento [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v2.0.0 (Wave 4)
+
+### Adicionado — Outcomes Framework (`src/services/Outcomes/`)
+- Sistema local de rubric-based validation, inspirado no Outcomes da Managed Agents API mas 100% local (sem beta).
+- `rubricParser.ts`: parseia markdown com frontmatter (`name`, `threshold` 0..1, `max_iterations`) + secoes `### <nome> (peso: N)` com checklist.
+- `grader.ts`: `grade()` puro sem dependencia de LLM (recebe `CriterionEvaluator` como parametro). Score = weighted average por peso. Passed = score >= threshold E todos criterios individuais passaram. Concurrency 3 workers.
+- `outcomeStore.ts`: log append-only em `~/.andreclaw/outcomes/outcomes.jsonl` + `computeStats()` que agrega por rubric (pass rate, avg score, avg iterations).
+- `isOutcomesEnabled()` respeitando env `ANDRECLAW_OUTCOMES=off`.
+- 20 testes unitarios (parser + grader + store).
+
+### Adicionado — Vault Dream (`src/services/vaultDream/`)
+- Consolidacao agendada de daily notes do vault Obsidian, complementar ao `autoDream` existente (que consolida `~/.andreclaw/memory/`).
+- `dateHelpers.ts`: startOfWeek/endOfWeek em UTC (ISO 8601 — segunda a domingo), parseIsoDate, extractDateFromFilename.
+- `dailyScanner.ts`: `scanDailies()` le pasta `Daily/` do vault, parseia frontmatter, sorted desc. `bucketByWeek()` agrupa em semanas ISO. `pickConsolidatableWeeks()` filtra por: (a) >= minDailies notas, (b) nenhuma ja consolidada, (c) semana ja terminou.
+- `config.ts`: le `~/.andreclaw/settings.json` -> `vaultDream: {...}`, com overrides via env `ANDRECLAW_VAULT_DREAM=on|off`, `ANDRECLAW_VAULT_PATH`, `ANDRECLAW_VAULT_DREAM_CRON`. Default cron: domingo 22h.
+- 25 testes unitarios (dateHelpers + scanner + config).
+
+### Documentado — CI/CD startup_failure
+- Diagnostico em `Projetos/AndreClaw/ci-startup-failure-diagnostico-2026-07-23.md` (no vault).
+- Root cause identificado: **free tier de 2.000 min/mes de GitHub Actions em repos privados foi estourado** (julho: 4.086 min). Todos os workflows falham com startup_failure sem log.
+- Nao e problema de YAML ou permissao. Confirmado com workflow trivial `hello-test.yml`.
+- Solucoes sugeridas: tornar repo publico (grande recomendacao), upgrade Pro ($4/mes), self-hosted runner na Hetzner, ou desligar workflows nao essenciais.
+
+### Metricas
+- **131/131 testes passando** (67 security + 19 embeddings + 20 Outcomes + 25 vaultDream)
+- Build ok, smoke ok
+- Zero regressao — todas features sao opt-in (env vars ou explicit call)
+
 ## [Unreleased] — v1.5.1 (Wave 3.5)
 
 ### Adicionado — Integracao real da memoria semantica
