@@ -1,0 +1,92 @@
+name: Upstream Sync Check
+
+# Verifica semanalmente se o upstream (T-Lab-CUHKSZ/claude-code) recebeu
+# commits novos e abre uma issue se houver drift.
+#
+# NOTA: T-Lab-CUHKSZ é buildable reference do vazamento de mar/2026, não
+# source of truth de features. Este workflow serve pra saber se ELES
+# retomaram atualizacoes. Features reais vêm da Anthropic oficial e são
+# rastreadas manualmente via anthropic-ref remote e docs publicas.
+
+on:
+  schedule:
+    # Segunda-feira 08:00 UTC (05:00 -03 Brasil)
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/T-Lab-CUHKSZ/claude-code.git
+          git fetch upstream --depth=100
+
+      - name: Compare with upstream
+        id: diff
+        run: |
+          NEW_COMMITS=$(git log HEAD..upstream/main --oneline | wc -l | tr -d ' ')
+          echo "new_commits=$NEW_COMMITS" >> $GITHUB_OUTPUT
+          if [ "$NEW_COMMITS" -gt "0" ]; then
+            git log HEAD..upstream/main --format="- %h %s (%ar)" | head -30 > /tmp/commits.md
+            echo "has_drift=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_drift=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create issue if drift detected
+        if: steps.diff.outputs.has_drift == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            const commits = fs.readFileSync('/tmp/commits.md', 'utf-8');
+            const count = '${{ steps.diff.outputs.new_commits }}';
+
+            // Evita duplicar issue se ja existe uma aberta com mesma label
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'upstream-drift'
+            });
+
+            if (existing.data.length > 0) {
+              console.log(`Issue de drift ja existe: #${existing.data[0].number}`);
+              return;
+            }
+
+            const body = [
+              `## Upstream drift detectado`,
+              ``,
+              `**${count} commits novos** no upstream (\`T-Lab-CUHKSZ/claude-code\`) desde o ultimo sync.`,
+              ``,
+              `### Commits:`,
+              commits,
+              ``,
+              `### Proximos passos:`,
+              `1. Revisar cada commit e classificar: relevante / nao-relevante / feature-nova`,
+              `2. Para commits relevantes, criar sub-issues rastreando a portagem`,
+              `3. Ignorar rebrand, mudancas cosmeticas e commits de docs proprios do fork`,
+              `4. Fechar esta issue quando terminar a triagem`,
+              ``,
+              `_Gerado automaticamente por \`.github/workflows/upstream-sync.yml\`._`,
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[upstream-drift] ${count} commits novos para revisar`,
+              body,
+              labels: ['upstream-drift', 'triage']
+            });

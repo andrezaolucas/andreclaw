@@ -8,6 +8,11 @@ import { getLspServerManager } from '../../services/lsp/manager.js'
 import { notifyVscodeFileUpdated } from '../../services/mcp/vscodeSdkMcp.js'
 import { checkTeamMemSecrets } from '../../services/teamMemorySync/teamMemSecretGuard.js'
 import {
+  checkConfigProtection,
+  detectSecrets,
+  isSecurityFeatureDisabled,
+} from '../../utils/security/index.js'
+import {
   activateConditionalSkillsForPaths,
   addSkillDirectories,
   discoverSkillDirsForPaths,
@@ -152,6 +157,34 @@ export const FileWriteTool = buildTool({
   },
   async validateInput({ file_path, content }, toolUseContext: ToolUseContext) {
     const fullFilePath = expandPath(file_path)
+
+    // AndreClaw Wave 2 (2026-07-23): AgentShield-lite / config protection.
+    // Impede que o agente edite linter/formatter/TS config pra silenciar
+    // erros em vez de corrigir o codigo.
+    if (!isSecurityFeatureDisabled('config-protection')) {
+      const configReason = checkConfigProtection(fullFilePath)
+      if (configReason) {
+        return { result: false, message: configReason, errorCode: 43 }
+      }
+    }
+
+    // AndreClaw Wave 2 (2026-07-23): AgentShield-lite / secret detection.
+    // Bloqueia writes com API keys, tokens, private keys, JWTs.
+    if (!isSecurityFeatureDisabled('secret-detection')) {
+      const secrets = detectSecrets(content)
+      if (secrets.length > 0) {
+        const top = secrets[0]
+        return {
+          result: false,
+          message:
+            `AgentShield detectou secret no conteudo (patternName=${top.patternName}, severity=${top.severity}). ` +
+            `Trecho: "${top.matched.slice(0, 30)}...". ` +
+            `Nao escreva credenciais em arquivos rastreados. Use env vars, secret manager (vault, doppler, aws-sm), ou .env fora do repo. ` +
+            `Se e placeholder, adicione o pattern em ~/.andreclaw/secrets-whitelist.json.`,
+          errorCode: 44,
+        }
+      }
+    }
 
     // Reject writes to team memory files that contain secrets
     const secretError = checkTeamMemSecrets(fullFilePath, content)

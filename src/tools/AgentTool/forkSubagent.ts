@@ -29,13 +29,27 @@ import type { BuiltInAgentDefinition } from './loadAgentsDir.js'
  * Mutually exclusive with coordinator mode — coordinator already owns the
  * orchestration role and has its own delegation model.
  */
+/**
+ * AndreClaw Wave 2 (2026-07-23): fork subagent GA em non-interactive.
+ *
+ * Anthropic shipou GA em v2.1.117 (interactive) e v2.1.121 (non-interactive
+ * / SDK). Aqui espelhamos: se `CLAUDE_CODE_FORK_SUBAGENT=1` ou
+ * `ANDRECLAW_FORK_SUBAGENT=1` estiver setado, o fork subagent tambem roda
+ * em modo non-interactive (`claude -p ...`, Agent SDK).
+ *
+ * OAuth Claude AI ainda forca off por politica; nao mexemos nisso.
+ * Coordinator mode continua exclusivo (delegation model proprio).
+ */
 export function isForkSubagentEnabled(): boolean {
-  if (feature('FORK_SUBAGENT')) {
-    if (isCoordinatorMode()) return false
-    if (getIsNonInteractiveSession()) return false
-    return true
+  if (!feature('FORK_SUBAGENT')) return false
+  if (isCoordinatorMode()) return false
+  if (getIsNonInteractiveSession()) {
+    const optIn =
+      process.env.CLAUDE_CODE_FORK_SUBAGENT === '1' ||
+      process.env.ANDRECLAW_FORK_SUBAGENT === '1'
+    return optIn
   }
-  return false
+  return true
 }
 
 /** Synthetic agent type name used for analytics when the fork path fires. */

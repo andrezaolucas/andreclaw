@@ -1,0 +1,43 @@
+version: 2
+updates:
+  # Deps npm criticas — semanal
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-name: "@anthropic-ai/*"
+      - dependency-name: "ink"
+      - dependency-name: "ink-*"
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "bun-types"
+      - dependency-name: "typescript"
+      - dependency-name: "openai"
+      - dependency-name: "@google/generative-ai"
+      - dependency-name: "ollama"
+    labels:
+      - "dependencies"
+      - "auto"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+
+  # Actions do GitHub — mensal (SHAs pinnados)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/Sao_Paulo"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"

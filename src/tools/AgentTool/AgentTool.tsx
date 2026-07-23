@@ -47,7 +47,7 @@ import { spawnTeammate } from '../shared/spawnMultiAgent.js';
 import { setAgentColor } from './agentColorManager.js';
 import { agentToolResultSchema, classifyHandoffIfNeeded, emitTaskProgress, extractPartialResult, finalizeAgentTool, getLastToolUseName, runAsyncAgentLifecycle } from './agentToolUtils.js';
 import { GENERAL_PURPOSE_AGENT } from './built-in/generalPurposeAgent.js';
-import { AGENT_TOOL_NAME, LEGACY_AGENT_TOOL_NAME, ONE_SHOT_BUILTIN_AGENT_TYPES } from './constants.js';
+import { AGENT_TOOL_NAME, LEGACY_AGENT_TOOL_NAME, ONE_SHOT_BUILTIN_AGENT_TYPES, getMaxAgentDepth } from './constants.js';
 import { buildForkedMessages, buildWorktreeNotice, FORK_AGENT, isForkSubagentEnabled, isInForkChild } from './forkSubagent.js';
 import type { AgentDefinition } from './loadAgentsDir.js';
 import { filterAgentsByMcpRequirements, hasRequiredMcpServers, isBuiltInAgent } from './loadAgentsDir.js';
@@ -250,6 +250,21 @@ export const AgentTool = buildTool({
   }: AgentToolInput, toolUseContext, canUseTool, assistantMessage, onProgress?) {
     const startTime = Date.now();
     const model = isCoordinatorMode() ? undefined : modelParam;
+
+    // AndreClaw Wave 2 (2026-07-23): Nested subagent depth cap.
+    // Alinhado com Anthropic v2.1.172 — recusa spawn quando profundidade
+    // atingiu o cap (default 5, override ANDRECLAW_MAX_AGENT_DEPTH).
+    // Preserva TeamCreate/Delete e SendMessage (mailbox pattern) que
+    // continuam operando na mesma sessao sem contar como spawn nested.
+    const currentDepth = toolUseContext.options.agentDepth ?? 0;
+    const maxDepth = getMaxAgentDepth();
+    if (currentDepth >= maxDepth) {
+      throw new Error(
+        `Nested subagent depth limit reached (${currentDepth}/${maxDepth}). ` +
+        `Retorna resultados pro parent em vez de spawnar outro agente. ` +
+        `Se realmente precisar de niveis extras, seta ANDRECLAW_MAX_AGENT_DEPTH.`,
+      );
+    }
 
     // Get app state for permission mode and agent filtering
     const appState = toolUseContext.getAppState();

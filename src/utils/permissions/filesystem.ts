@@ -234,10 +234,21 @@ function isClaudeConfigFilePath(filePath: string): boolean {
   const agentsDir = join(getOriginalCwd(), '.claude', 'agents')
   const skillsDir = join(getOriginalCwd(), '.claude', 'skills')
 
+  // AndreClaw Wave 3 (2026-07-23): Skill folder protection alinhada com
+  // Anthropic v2.1.126. Alem de .claude/{commands,agents,skills}, protege
+  // .andreclaw/* que sao paths especificos do AndreClaw. Bypass-immune
+  // mesmo com --dangerously-skip-permissions (via checkPathSafetyForAutoEdit).
+  const andreclawCommandsDir = join(getOriginalCwd(), '.andreclaw', 'commands')
+  const andreclawAgentsDir = join(getOriginalCwd(), '.andreclaw', 'agents')
+  const andreclawSkillsDir = join(getOriginalCwd(), '.andreclaw', 'skills')
+
   return (
     pathInWorkingPath(filePath, commandsDir) ||
     pathInWorkingPath(filePath, agentsDir) ||
-    pathInWorkingPath(filePath, skillsDir)
+    pathInWorkingPath(filePath, skillsDir) ||
+    pathInWorkingPath(filePath, andreclawCommandsDir) ||
+    pathInWorkingPath(filePath, andreclawAgentsDir) ||
+    pathInWorkingPath(filePath, andreclawSkillsDir)
   )
 }
 

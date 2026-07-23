@@ -176,6 +176,16 @@ export type ToolUseContext = {
     querySource?: QuerySource
     /** Optional callback to get the latest tools (e.g., after MCP servers connect mid-query) */
     refreshTools?: () => Tools
+    /**
+     * AndreClaw Wave 2 (2026-07-23): Current nesting depth of this agent.
+     *
+     * Depth 0 = main loop (root). Each subagent spawn increments by 1.
+     * AgentTool refuses to spawn when depth >= getMaxAgentDepth() (default 5).
+     *
+     * Propagated automatically via createSubagentContext (see forkedAgent.ts)
+     * and via runAgent (see runAgent.ts).
+     */
+    agentDepth?: number
   }
   abortController: AbortController
   readFileState: FileStateCache

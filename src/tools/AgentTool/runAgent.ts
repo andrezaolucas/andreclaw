@@ -692,6 +692,10 @@ export async function* runAgent({
     // reads undefined and only the message-scan fallback fires — which
     // autocompact defeats by replacing the fork-boilerplate message.
     ...(useExactTools && { querySource }),
+    // AndreClaw Wave 2 (2026-07-23): Propaga depth+1 pro child para
+    // enforcement do nested subagent cap em AgentTool.tsx. Sobrevive
+    // autocompact (options nao sao reescritas).
+    agentDepth: (toolUseContext.options.agentDepth ?? 0) + 1,
   }
 
   // Create subagent context using shared helper

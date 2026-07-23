@@ -7,6 +7,11 @@ import { getLspServerManager } from '../../services/lsp/manager.js'
 import { notifyVscodeFileUpdated } from '../../services/mcp/vscodeSdkMcp.js'
 import { checkTeamMemSecrets } from '../../services/teamMemorySync/teamMemSecretGuard.js'
 import {
+  checkConfigProtection,
+  detectSecrets,
+  isSecurityFeatureDisabled,
+} from '../../utils/security/index.js'
+import {
   activateConditionalSkillsForPaths,
   addSkillDirectories,
   discoverSkillDirsForPaths,
@@ -139,6 +144,31 @@ export const FileEditTool = buildTool({
     // Use expandPath for consistent path normalization (especially on Windows
     // where "/" vs "\" can cause readFileState lookup mismatches)
     const fullFilePath = expandPath(file_path)
+
+    // AndreClaw Wave 2 (2026-07-23): AgentShield-lite / config protection.
+    if (!isSecurityFeatureDisabled('config-protection')) {
+      const configReason = checkConfigProtection(fullFilePath)
+      if (configReason) {
+        return { result: false, message: configReason, errorCode: 43 }
+      }
+    }
+
+    // AndreClaw Wave 2 (2026-07-23): AgentShield-lite / secret detection.
+    if (!isSecurityFeatureDisabled('secret-detection')) {
+      const secrets = detectSecrets(new_string)
+      if (secrets.length > 0) {
+        const top = secrets[0]
+        return {
+          result: false,
+          message:
+            `AgentShield detectou secret no new_string (patternName=${top.patternName}, severity=${top.severity}). ` +
+            `Trecho: "${top.matched.slice(0, 30)}...". ` +
+            `Nao introduza credenciais em arquivos rastreados. ` +
+            `Se e placeholder, adicione o pattern em ~/.andreclaw/secrets-whitelist.json.`,
+          errorCode: 44,
+        }
+      }
+    }
 
     // Reject edits to team memory files that introduce secrets
     const secretError = checkTeamMemSecrets(fullFilePath, new_string)

@@ -8,7 +8,7 @@
  * - src/ path aliases
  */
 
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync, cpSync } from 'fs'
 import { noTelemetryPlugin } from './no-telemetry-plugin'
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'))
@@ -18,6 +18,13 @@ const version = pkg.version
 // These gate Anthropic-internal features (voice, proactive, kairos, etc.)
 const featureFlags: Record<string, boolean> = {
   VOICE_MODE: true,
+  // AndreClaw Wave 2: fork subagent GA (era experimental na Anthropic v2.1.117,
+  // non-interactive GA em v2.1.121). Aplica em interactive + headless + SDK.
+  FORK_SUBAGENT: true,
+  // AndreClaw Wave 2: telemetria de shape das memorias (denominador vs. picks)
+  MEMORY_SHAPE_TELEMETRY: true,
+  // AndreClaw Wave 2: snapshots de agent-memory (project -> local sync)
+  AGENT_MEMORY_SNAPSHOT: true,
   PROACTIVE: false,
   KAIROS: false,
   BRIDGE_MODE: false,
@@ -303,3 +310,12 @@ if (!result.success) {
 }
 
 console.log(`✓ Built andreclaw v${version} → dist/cli.mjs`)
+
+// Copiar vendor binaries (ripgrep, seccomp, audio-capture) pro dist/
+// para que o CLI encontre-os em runtime via caminho relativo esperado.
+if (existsSync('./vendor')) {
+  cpSync('./vendor', './dist/vendor', { recursive: true, dereference: true })
+  console.log('✓ Copied vendor/ → dist/vendor/')
+} else {
+  console.warn('⚠ vendor/ nao existe — dist/vendor/ nao foi criado')
+}

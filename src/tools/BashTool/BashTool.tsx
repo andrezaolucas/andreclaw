@@ -1,4 +1,9 @@
 import { feature } from 'bun:bundle';
+import {
+  detectDangerousCommands,
+  getSecurityProfile,
+  isSecurityFeatureDisabled,
+} from '../../utils/security/index.js';
 import type { ToolResultBlockParam } from '@anthropic-ai/sdk/resources/index.mjs';
 import { copyFile, stat as fsStat, truncate as fsTruncate, link } from 'fs/promises';
 import * as React from 'react';
@@ -522,6 +527,26 @@ export const BashTool = buildTool({
     return `Running ${desc}`;
   },
   async validateInput(input: BashToolInput): Promise<ValidationResult> {
+    // AndreClaw Wave 2 (2026-07-23): AgentShield-lite / dangerous commands.
+    // Bloqueia antes de canUseTool ter chance — o erro reflete direto pro
+    // agente sem passar por permission prompt (evita bypass acidental).
+    if (!isSecurityFeatureDisabled('dangerous-commands')) {
+      const profile = getSecurityProfile();
+      const dangers = detectDangerousCommands(input.command, profile);
+      if (dangers.length > 0) {
+        const top = dangers[0];
+        return {
+          result: false,
+          message:
+            `AgentShield bloqueou comando (profile=${profile}, severity=${top.severity}): ${top.reason}. ` +
+            `Trecho: "${top.matched}". ` +
+            `Se voce realmente precisa executar isso, o usuario deve rodar manualmente ` +
+            `ou temporariamente setar ANDRECLAW_SECURITY_DISABLED=dangerous-commands.`,
+          errorCode: 42
+        };
+      }
+    }
+
     if (feature('MONITOR_TOOL') && !isBackgroundTasksDisabled && !input.run_in_background) {
       const sleepPattern = detectBlockedSleepPattern(input.command);
       if (sleepPattern !== null) {
