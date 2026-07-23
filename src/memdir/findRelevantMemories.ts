@@ -4,6 +4,7 @@ import { errorMessage } from '../utils/errors.js'
 import { getDefaultSonnetModel } from '../utils/model/model.js'
 import { sideQuery } from '../utils/sideQuery.js'
 import { jsonParse } from '../utils/slowOperations.js'
+import { semanticRank } from './embeddings/semanticSearch.js'
 import {
   formatMemoryManifest,
   type MemoryHeader,
@@ -48,6 +49,43 @@ export async function findRelevantMemories(
   )
   if (memories.length === 0) {
     return []
+  }
+
+  // AndreClaw Wave 3+ (2026-07-23): Semantic pre-ranking opt-in.
+  // Se ANDRECLAW_SEMANTIC_MEMORY nao for "off" e um cliente de embeddings
+  // (Ollama ou OpenAI) estiver disponivel, tenta ranking semantico antes
+  // do Sonnet-selector. Se retornar >= 3 matches fortes, usa direto e
+  // economiza chamada ao Sonnet. Caso contrario, fallback transparente.
+  const semanticDisabled =
+    process.env.ANDRECLAW_SEMANTIC_MEMORY === 'off'
+  if (!semanticDisabled) {
+    try {
+      const semantic = await semanticRank(query, memories, signal)
+      if (semantic !== null && semantic.length > 0) {
+        logForDebugging(
+          `[memdir] semantic ranking hit: ${semantic.length} matches ` +
+            `(top score: ${semantic[0].score.toFixed(3)})`,
+        )
+        // Reusa telemetria com o mesmo shape do Sonnet-selector
+        if (feature('MEMORY_SHAPE_TELEMETRY')) {
+          /* eslint-disable @typescript-eslint/no-require-imports */
+          const { logMemoryRecallShape } =
+            require('./memoryShapeTelemetry.js') as typeof import('./memoryShapeTelemetry.js')
+          /* eslint-enable @typescript-eslint/no-require-imports */
+          const byPath = new Map(memories.map(m => [m.filePath, m]))
+          const selected = semantic
+            .map(s => byPath.get(s.path))
+            .filter((m): m is MemoryHeader => m !== undefined)
+          logMemoryRecallShape(memories, selected)
+        }
+        return semantic.map(s => ({ path: s.path, mtimeMs: s.mtimeMs }))
+      }
+    } catch (e) {
+      // Falha silenciosa — cai pro Sonnet
+      logForDebugging(
+        `[memdir] semantic ranking failed, falling back to Sonnet: ${errorMessage(e)}`,
+      )
+    }
   }
 
   const selectedFilenames = await selectRelevantMemories(

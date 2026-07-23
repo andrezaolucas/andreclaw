@@ -5,6 +5,22 @@ Todos os changes relevantes do AndreClaw sao documentados aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 e versionamento [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v1.5.1 (Wave 3.5)
+
+### Adicionado — Integracao real da memoria semantica
+- `src/memdir/embeddings/semanticSearch.ts` — funcao `semanticRank(query, headers, signal)` que retorna top-N memorias ordenadas por cosine similarity.
+- `src/memdir/embeddings/indexStore.ts` — persistent index em `~/.andreclaw/memdir/embeddings-index.jsonl` (append-only). Metadata em `embeddings-meta.json` com provider/model/dim/version — schema mismatch invalida tudo silenciosamente.
+- `findRelevantMemories.ts` **plugado**: tenta semantic ranking antes do Sonnet-selector. Se retorna >= 3 matches com score >= 0.35, usa direto e economiza tokens. Fallback transparente pro Sonnet quando indisponivel ou baixa confianca.
+- Reindex lazy quando `mtimeMs` muda; forcing reset via env `ANDRECLAW_REINDEX_MEMORIES=1`.
+- Bounded concurrency (4 workers) pra embedar memorias em paralelo sem overload do provider.
+- `ANDRECLAW_SEMANTIC_MEMORY=off` desliga completamente pra debugging.
+- `resolveHome()` usa `process.env.HOME` primeiro (permite override em testes/sandbox).
+- 8 testes unitarios adicionais no `indexStore.test.ts` (schema invalidation, corrupcao silenciosa, mtime detection).
+
+### Metricas
+- 86/86 testes passando (67 security + 19 embeddings)
+- Zero mudanca de comportamento default sem cliente de embeddings — Sonnet-selector segue funcionando normalmente.
+
 ## [Unreleased] — v1.5.0 (Wave 3)
 
 ### Adicionado — Skills

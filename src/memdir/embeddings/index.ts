@@ -13,6 +13,8 @@ import type { EmbeddingsClient, EmbeddingsProvider } from './types.js'
 
 export type { EmbeddingsClient, EmbeddingsProvider, EmbeddingVector, MemoryEmbedding, SemanticMatch } from './types.js'
 export { cosineSimilarity, contentHash } from './similarity.js'
+export { semanticRank } from './semanticSearch.js'
+export { _resetIndexCache } from './indexStore.js'
 
 let cachedClient: EmbeddingsClient | undefined
 let clientDiscovered = false
