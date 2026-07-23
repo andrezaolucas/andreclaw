@@ -5,6 +5,14 @@ Todos os changes relevantes do AndreClaw sao documentados aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 e versionamento [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v2.0.1 (Bugfix)
+
+### Corrigido — Model resolver com contaminacao cruzada de providers
+- `getUserSpecifiedModelSetting()` em `src/utils/model/model.ts` agora consulta o `APIProvider` ativo (via `getAPIProvider()`) antes de escolher qual env var de model usar.
+- **Bug anterior**: pegava `ANTHROPIC_MODEL || GEMINI_MODEL || OPENAI_MODEL` na cascata, o que fazia AndreClaw iniciar com `deepseek-chat` quando o user tinha `OPENAI_MODEL=deepseek-chat` setado no shell mesmo rodando com provider firstParty (Claude Max). Startup mostrava "Model deepseek-chat" no header e a primeira mensagem retornava "There's an issue with the selected model (deepseek-chat). It may not exist or you may not have access to it. Run /model to pick a different model."
+- **Fix**: env var e escolhida pelo provider ativo — `firstParty|bedrock|vertex|foundry|github` → `ANTHROPIC_MODEL`; `openai|codex` → `OPENAI_MODEL`; `gemini` → `GEMINI_MODEL`.
+- Zero regressao: 131/131 testes passando.
+
 ## [Unreleased] — v2.0.0 (Wave 4)
 
 ### Adicionado — Outcomes Framework (`src/services/Outcomes/`)
