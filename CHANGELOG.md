@@ -5,6 +5,52 @@ Todos os changes relevantes do AndreClaw sao documentados aqui.
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 e versionamento [SemVer](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v2.1.0 (Wave 5)
+
+### Adicionado — Credential Vault (`src/services/credentialVault/`)
+
+Sistema de gerenciamento de API keys de providers de LLM, resolvendo o
+problema real que causou o bug v2.0.1 (env vars vazando entre providers).
+
+**Providers suportados** (com healthcheck real): `openai`, `deepseek`,
+`gemini`, `groq`, `openrouter`, `anthropic-key`.
+
+**Encryption**:
+- AES-256-GCM (auth tag 16 bytes, IV 12 bytes por credential)
+- HKDF-SHA256 pra derivacao de key per-credential (salt 16 bytes)
+- Master key 32 bytes armazenada:
+  - macOS: **Keychain** via `security` CLI builtin (sem npm dep extra)
+  - Linux/Windows: fallback file `~/.andreclaw/.master-key` (mode 0600)
+- Vault file `~/.andreclaw/credentials.enc` (mode 0600 forcado)
+
+**API**:
+- `set(provider, apiKey)` — valida length, encripta, salva
+- `get(provider)` — precedencia: env var especifica > vault > undefined
+- `remove(provider)` — apaga (idempotente)
+- `list()` — retorna metadata (`provider`, `addedAt`, `lastUsedAt`, `hint`)
+  sem revelar valores. Hint: `sk-abc***xyz9` (6 primeiros + '***' + 4 ultimos)
+- `validate(provider, apiKey)` — healthcheck no endpoint de list-models
+  (10s timeout, sem retry, detecta modelos disponiveis)
+
+**Justificativa arquitetural**:
+- Providers reais de LLM (OpenAI, DeepSeek, Gemini, Groq, OpenRouter)
+  **NAO** suportam OAuth 2.0 pra API — todos usam Bearer token.
+- Codex CLI e Gemini CLI tem OAuth, mas so pra ChatGPT sub / Code Assist,
+  nao pra desenvolvedor terceiro.
+- Vault resolve dor real: sem env vars vazando, sem key hardcoded em codigo,
+  sem prompt de senha toda hora (Keychain lembra).
+
+**Testes**: 23 unitarios (crypto round-trip, tampering detection, precedencia
+env, permissoes 0600, arquivo corrompido nao quebra list, unicode, valores grandes).
+
+**Env vars uteis**:
+- `ANDRECLAW_VAULT_NO_KEYCHAIN=1` — forca file-based (tests, CI)
+
+**Comandos slash** (Wave 5.1 futura): `/login`, `/logout`, `/whoami`, `/rotate`.
+Hoje a API programatica ja funciona; integracao com model provider (usar
+`vault.get()` em vez de `process.env.OPENAI_API_KEY`) fica pra proxima
+iteracao.
+
 ## [Unreleased] — v2.0.1 (Bugfix)
 
 ### Corrigido — Model resolver com contaminacao cruzada de providers
